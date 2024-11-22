@@ -1,0 +1,505 @@
+{% include 'header' %}
+{% assign variant = product.master_or_variant %}
+
+
+<div class="container">
+  {% include 'product_breadcrumbs' %}
+</div>
+
+<div class="container prod-container">
+  <div class="row">
+
+
+    <div class="col-sm-12 col-lg-6 spacing-8">
+
+      <div class="product-brand-information d-flex justify-content-between">
+        <div class="brand-name">
+          <p class="text-sm-bold"><a href="{{ product.groups.breadcrumbs_for_varumarken[1].url }}"
+                                     class="text-decoration-none">{{ product.groups.breadcrumbs_for_varumarken[1].name }}</a>
+          </p>
+          <p class="text-sm-regular">{{ 'Art.nr:' | t }} <span id="product-sku">{{ product.master.sku }} </span></p>
+        </div>
+        <a href="{{ product.groups.breadcrumbs_for_varumarken[1].url }}" class="text-decoration-none brand-logo"><img
+            src="{{ product.groups.breadcrumbs_for_varumarken[1].image_url }}"/></a>
+      </div>
+
+      <p class="xl-bold">{{ product.name }}</p>
+      <div class="default-content product-short-description">{{ product.short_description }}</div>
+      <p class="lg-bold product-price m-0" id="product-price"
+         {% if product.prices.sale.exists? or product.prices.current.discount_list? == true %}style="display: none;"{% endif %}>
+        {% if showTaxes == true %}{{ variant.prices.current.after_tax_amount | currency: currency_precision }}{% else %}{{ variant.prices.current.pre_tax_amount | currency: currency_precision }}{% endif %}
+      </p>
+      <p class="lg-bold product-campaign-price  m-0" id="product-sale-price"
+         {% unless product.prices.sale.exists? or product.prices.current.discount_list? == true %}style="display: none;"{% endunless %}>
+        {% if product.prices.sale.amount > 0 %}
+          {% if showTaxes == true %}{{ variant.prices.sale.after_tax_amount | currency: currency_precision }}{% else %}{{ variant.prices.sale.pre_tax_amount | currency: currency_precision }}{% endif %}
+        {% else %}
+          {% if showTaxes == true %}{{ variant.prices.current.after_tax_amount | currency: currency_precision }}{% else %}{{ variant.prices.current.pre_tax_amount | currency: currency_precision }}{% endif %}
+        {% endif %}
+      </p>
+      <p class="text-lg-regular stroke product-price  m-0" id="product-original-price"
+         {% unless product.prices.sale.exists? or product.prices.current.discount_list? == true %}style="display: none;"{% endunless %}>
+        {% if showTaxes == true %}{{ variant.prices.default.after_tax_amount | currency: currency_precision }}{% else %}{{ variant.prices.default.pre_tax_amount | currency: currency_precision }}{% endif %}
+      </p>
+
+
+      {% if showTaxes %}
+        <p class="text-md-semibold  m-0">{{ 'inkl. moms' | t }}</p>
+      {% else %}
+        <p class="text-md-semibold  m-0">{{ 'exkl. moms' | t }}</p>
+      {% endif %}
+
+      {% if request.params.new %}
+        {% include 'product_wrapper_solution' %}
+      {% else %}
+        {% include 'add_to_cart_form' %}
+      {% endif %}
+    </div>
+
+    <div class="col-sm-12 col-lg-6 product-images">
+      <div class="on-sale" id="discount-label"
+           {% if product.prices.sale.exists? %}{% if product.prices.sale.discount > 0 %}style="display: block;"{% endif %}{% endif %}>
+        {{ product.prices.sale.discount | round }}%
+      </div>
+      {% include 'product_images_sliders' %}
+    </div>
+  </div>
+</div>
+
+
+<section class="default-content product-single-details py-5">
+  <div class="container">
+
+    <div class="row">
+      <div class="col-12 col-md-8">
+        <h3>{{ 'Produktbeskrivning' | t }}</h3>
+        {{ product.description }}
+
+        <div class="accordion mt-3" id="accordionPanelsStayOpenExample">
+          {% if product.Produktegenskaper.size > 0 %}
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true"
+                        aria-controls="panelsStayOpen-collapseOne">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                       class="icon-plus">
+                    <path
+                      d="M12 8V16M8 12H16M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z"
+                      stroke="#347EC3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                       class="icon-minus">
+                    <path
+                      d="M8 12H16M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z"
+                      stroke="#347EC3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  {{ 'Produktegenskaper' | t }}
+                </button>
+              </h2>
+              <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse">
+                <div class="accordion-body">
+                  {{ product.Produktegenskaper }}
+                </div>
+              </div>
+            </div>
+          {% endif %}
+
+          {% assign specifications = product.properties_by_category | select: 'name', 'Specifikationer' %}
+
+          {% if specifications.size > 0 %}
+            <div class="accordion-item section-product-details"
+                 {% if product.variants.size > 0 %}style="display: none;"{% endif %}>
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false"
+                        aria-controls="panelsStayOpen-collapseTwo">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                       class="icon-plus">
+                    <path
+                      d="M12 8V16M8 12H16M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z"
+                      stroke="#347EC3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                       class="icon-minus">
+                    <path
+                      d="M8 12H16M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z"
+                      stroke="#347EC3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  {{ 'Teknisk specifikation' | t }}
+                </button>
+              </h2>
+              <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse">
+                <div class="accordion-body">
+
+                  {% if product.variants.size > 0 %}
+                    {% for v in product.variants %}
+                      {% if v.properties.size > 0 %}
+                        <table data-id="{{ v.id }}" style="display: none; margin-bottom: 15px;">
+                          {% for p in v.properties %}
+                            <tr>
+                              <td><b>{{ p.presentation }}</b></td>
+                              <td>
+                                {% if p.measurement? %}{{ p.values[0].presentation | remove: '.0' }}{{ p.measurement_unit }}
+                                {% else %}{{ p.values[0].presentation }}
+                                {% endif %}
+                              </td>
+                            </tr>
+                          {% endfor %}
+                        </table>
+
+                      {% endif %}
+                    {% endfor %}
+                  {% else %}
+                    <table>
+                      {% for p in specifications[0].properties %}
+                        <tr>
+                          <td><b>{{ p.presentation }}</b></td>
+                          <td>
+                            {% if p.measurement? %}{{ p.values[0].presentation | remove: '.0' }}{{ p.measurement_unit }}
+                            {% else %}{{ p.values[0].presentation }}
+                            {% endif %}
+                          </td>
+                        </tr>
+                      {% endfor %}
+                    </table>
+
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+
+
+
+          {% endif %}
+          {% if product.Ovrig_information.size > 0 %}
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false"
+                        aria-controls="panelsStayOpen-collapseThree">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                       class="icon-plus">
+                    <path
+                      d="M12 8V16M8 12H16M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z"
+                      stroke="#347EC3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                       class="icon-minus">
+                    <path
+                      d="M8 12H16M22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12Z"
+                      stroke="#347EC3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  {{ 'Övrig information' | t }}
+                </button>
+              </h2>
+              <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse">
+                <div class="accordion-body">
+                  {{ product.Ovrig_information }}
+                </div>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+
+
+      </div>
+      {% capture files %}
+        {% for file in product.files %}
+          {% if file.file_type == 'other' %}
+            {% assign show_file = true %}
+            <a class="d-block mb-2" href="{{ file.url }}" target="_blank">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path
+                  d="M6.66602 9.99997L9.99935 13.3333M9.99935 13.3333L13.3327 9.99997M9.99935 13.3333V5.66664C9.99935 4.50771 9.99935 3.92825 9.54058 3.27947C9.23577 2.8484 8.35817 2.31637 7.835 2.24549C7.04759 2.1388 6.74857 2.29479 6.15054 2.60675C3.48546 3.997 1.66602 6.78601 1.66602 9.99997C1.66602 14.6023 5.39698 18.3333 9.99935 18.3333C14.6017 18.3333 18.3327 14.6023 18.3327 9.99997C18.3327 6.91546 16.6569 4.22236 14.166 2.78149"
+                  stroke="#1F5085" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              {{ file.pretty_name }}
+            </a>
+          {% endif %}
+        {% endfor %}
+      {% endcapture %}
+
+
+      <div class="col-12 col-md-4">
+        {% if show_file %}
+          <h3>{{ 'Produktmanualer' | t }}</h3>
+          {{ files }}
+        {% endif %}
+        <div class="row-product-videos">
+
+          {% if product.property_youtube1.value.size > 0 %}
+            <div class="col-12">
+              <iframe width="560" height="315" src="https://www.youtube.com/embed/{{ product.property_youtube1.value }}"
+                      title="YouTube video player" frameborder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+          {% endif %}
+          {% if product.property_youtube2.value.size > 0 %}
+            <div class="col-12">
+              <iframe width="560" height="315" src="https://www.youtube.com/embed/{{ product.property_youtube2.value }}"
+                      title="YouTube video player" frameborder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+          {% endif %}
+          {% if product.property_youtube3.value.size > 0 %}
+            <div class="col-12">
+              <iframe width="560" height="315" src="https://www.youtube.com/embed/{{ product.property_youtube3.value }}"
+                      title="YouTube video player" frameborder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+          {% endif %}
+          {% if product.property_youtube4.value.size > 0 %}
+            <div class="col-12">
+              <iframe width="560" height="315" src="https://www.youtube.com/embed/{{ product.property_youtube4.value }}"
+                      title="YouTube video player" frameborder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+          {% endif %}
+          {% if product.property_youtube5.value.size > 0 %}
+            <div class="col-12">
+              <iframe width="560" height="315" src="https://www.youtube.com/embed/{{ product.property_youtube5.value }}"
+                      title="YouTube video player" frameborder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+          {% endif %}
+          {% if product.property_youtube6.value.size > 0 %}
+            <div class="col-12">
+              <iframe width="560" height="315" src="https://www.youtube.com/embed/{{ product.property_youtube6.value }}"
+                      title="YouTube video player" frameborder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+          {% endif %}
+        </div>
+        <div class="row-product-videos">
+          {% if product.property_vimeo1.value.size > 0 %}
+            <div class="col-12">
+              <iframe width="560" height="315" src="https://player.vimeo.com/video/{{ product.property_vimeo1.value }}"
+                      frameborder="0" allow="autoplay; encrypted-media" allowfullscreen=""></iframe>
+            </div>
+          {% endif %}
+          {% if product.property_vimeo2.value.size > 0 %}
+            <div class="col-12">
+              <iframe width="560" height="315" src="https://player.vimeo.com/video/{{ product.property_vimeo2.value }}"
+                      frameborder="0" allow="autoplay; encrypted-media" allowfullscreen=""></iframe>
+            </div>
+          {% endif %}
+          {% if product.property_vimeo3.value.size > 0 %}
+            <div class="col-12">
+              <iframe width="560" height="315" src="https://player.vimeo.com/video/{{ product.property_vimeo3.value }}"
+                      frameborder="0" allow="autoplay; encrypted-media" allowfullscreen=""></iframe>
+            </div>
+          {% endif %}
+          {% if product.property_vimeo4.value.size > 0 %}
+            <div class="col-12">
+              <iframe width="560" height="315" src="https://player.vimeo.com/video/{{ product.property_vimeo4.value }}"
+                      frameborder="0" allow="autoplay; encrypted-media" allowfullscreen=""></iframe>
+            </div>
+          {% endif %}
+          {% if product.property_vimeo5.value.size > 0 %}
+            <div class="col-12">
+              <iframe width="560" height="315" src="https://player.vimeo.com/video/{{ product.property_vimeo5.value }}"
+                      frameborder="0" allow="autoplay; encrypted-media" allowfullscreen=""></iframe>
+            </div>
+          {% endif %}
+          {% if product.property_vimeo6.value.size > 0 %}
+            <div class="col-12">
+              <iframe width="560" height="315" src="https://player.vimeo.com/video/{{ product.property_vimeo6.value }}"
+                      frameborder="0" allow="autoplay; encrypted-media" allowfullscreen=""></iframe>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+    </div>
+
+
+  </div>
+</section>
+
+{% if product.product_relations_rel_a0.size > 0 %}
+  <section class="product-single-recommended py-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 col-sm-8">
+          <h3>{{ 'Relaterade produkter' | t }}</h3>
+        </div>
+      </div>
+      <div class="row">
+        <div class="swiper mySwiper3">
+          <div class="swiper-wrapper">
+            {% for productrel in product.product_relations_rel_a0 %}
+              {% assign col = 'swiper-slide' %}
+              {% assign prod = productrel.related_product %}
+              {% assign variant = prod.master_or_variant %}
+              {% include 'product' %}
+            {% endfor %}
+            {% for productrel in product.product_relations_rel_a2 %}
+              {% assign col = 'swiper-slide' %}
+              {% assign prod = productrel.related_product %}
+              {% assign variant = prod.master_or_variant %}
+              {% include 'product' %}
+            {% endfor %}
+          </div>
+          <div class="swiper-button-next"></div>
+          <div class="swiper-button-prev"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Initialize Swiper -->
+  <script>
+    var swiper = new Swiper('.mySwiper3', {
+      slidesPerView: 1.3,
+      spaceBetween: 20,
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+      breakpoints: {
+        640: {
+          slidesPerView: 2,
+        },
+        768: {
+          slidesPerView: 3,
+        },
+        1024: {
+          slidesPerView: 5,
+        },
+      },
+    });
+  </script>
+{% endif %}
+
+{% if product.product_relations_rel_a1.size > 0 %}
+  <section class="product-single-recommended py-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 col-sm-8">
+          <h3>{{ 'Köp till' | t }}</h3>
+        </div>
+      </div>
+      <div class="row">
+        <div class="swiper mySwiper4">
+          <div class="swiper-wrapper">
+            {% for productrel in product.product_relations_rel_a1 %}
+              {% assign col = 'swiper-slide' %}
+              {% assign prod = productrel.related_product %}
+              {% assign variant = prod.master_or_variant %}
+              {% include 'product' %}
+            {% endfor %}
+          </div>
+          <div class="swiper-button-next"></div>
+          <div class="swiper-button-prev"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Initialize Swiper -->
+  <script>
+    var swiper = new Swiper('.mySwiper4', {
+      slidesPerView: 1.3,
+      spaceBetween: 20,
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+      breakpoints: {
+        640: {
+          slidesPerView: 2,
+        },
+        768: {
+          slidesPerView: 3,
+        },
+        1024: {
+          slidesPerView: 5,
+        },
+      },
+    });
+  </script>
+{% endif %}
+
+
+{% if product.ai_recommendations.size > 0 %}
+  <section class="product-single-recommended py-5">
+    <div class="container">
+      <div class="row">
+        <div class="col-12 col-sm-8">
+          <h3>{{ 'Rekommenderade produkter' | t }}</h3>
+        </div>
+      </div>
+      <div class="row">
+        <div class="swiper mySwiper3">
+          <div class="swiper-wrapper">
+            {% for recommendation in product.ai_recommendations %}
+
+              {% if recommendation.id != product.id %}
+                {% assign variant = recommendation %}
+                {% assign prod = recommendation %}
+                {% assign variant = prod.master_or_variant %}
+                {% assign col = 'swiper-slide' %}
+                {% include 'product' %}
+              {% endif %}
+            {% endfor %}
+          </div>
+          <div class="swiper-button-next"></div>
+          <div class="swiper-button-prev"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Initialize Swiper -->
+  <script>
+    var swiper = new Swiper('.mySwiper3', {
+      slidesPerView: 1.3,
+      spaceBetween: 20,
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+      breakpoints: {
+        640: {
+          slidesPerView: 2,
+        },
+        768: {
+          slidesPerView: 3,
+        },
+        1024: {
+          slidesPerView: 5,
+        },
+      },
+    });
+  </script>
+{% endif %}
+
+
+<script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css"
+/>
+
+<script>
+  Fancybox.bind('[data-fancybox]', {
+    // Your custom options
+  });
+
+</script>
+
+{% if request.params['v'] %}
+  request.params['v']: {{ request.params['v'] }}
+
+  <script>
+    // Your variable SKU
+    var paramSKU = "{{ request.params['v'] }}"; // Example SKU to match
+    console.log('paramSKU', paramSKU);
+
+  </script>
+{% endif %}
+{% include 'footer' %}

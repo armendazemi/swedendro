@@ -1,0 +1,108 @@
+<ul class="desktop-menu ">
+  <li>
+    <a href="{{ groups.sortiment.url }}" class="subtitle2 d-flex align-items-center text-md-semibold">
+      {{ groups.sortiment.name }}
+    </a>
+    <div class="toggle-subgroup">
+      <span class="material-symbols-outlined">expand_more</span>
+    </div>
+    <ul class="desktop-sub-menu" style="display: none">
+      <div class="desktop-nav-wrapper container">
+        <div class="row">
+          {% for subcategory in groups.sortiment.children %}
+            {% if subcategory.visible? %}
+              <li class="desktop-sub-menu-item">
+              <a href="{{ subcategory.url }}" class="subtitle2 text-md-semibold">{{ subcategory.name }}</a>
+              {% if subcategory.children.size > 0 %}
+                <div class="toggle-subgroup">
+                  <span class="material-symbols-outlined">expand_more</span>
+                </div>
+                <ul class="subsecond-menu">
+                  {% for subsecond in subcategory.children %}
+                    <li class="subtitle2 subsecond-menu-item"><a href="{{ subsecond.url }}">{{ subsecond.name }}</a>
+                    </li>
+                  {% endfor %}
+                </ul>
+                </li>
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </ul>
+  </li>
+  {% for category in groups.all %}
+    {% assign topmeny_tag_exist = category.tags | select: 'name', 'topmeny' %}
+    {% if topmeny_tag_exist.size > 0 %}
+      {% if category.visible? %}
+        <li class="">
+          <a href="{{ category.url }}"
+             class="subtitle2 d-flex align-items-center text-md-semibold">{{ category.name }}{% if category.children.size > 0 %}
+              <span class="material-symbols-outlined">expand_more</span>
+            {% endif %}</a>
+          {% if category.children.size > 0 %}
+            <ul class="desktop-sub-menu" style="display: none">
+              <div class="desktop-nav-wrapper container">
+                <div class="row">
+                  {% for subcategory in category.children %}
+                    {% if subcategory.visible? %}
+                      <li class="desktop-sub-menu-item">
+                      <a href="{{ subcategory.url }}" class="subtitle2 text-md-semibold">{{ subcategory.name }}</a>
+                      {% if subcategory.children.size > 0 %}
+                        <ul class="subsecond-menu">
+                          {% for subsecond in subcategory.children %}
+                            <li class="subtitle2 subsecond-menu-item"><a
+                                href="{{ subsecond.url }}">{{ subsecond.name }}</a></li>
+                          {% endfor %}
+                        </ul>
+                        </li>
+                      {% endif %}
+                    {% endif %}
+                  {% endfor %}
+                </div>
+              </div>
+            </ul>
+          {% endif %}
+        </li>
+      {% endif %}
+    {% endif %}
+  {% endfor %}
+
+
+  {% for page in site.all_pages %}
+    {% if page.title == "menu" %}
+      {% for menu in page.children %}
+        {% unless menu.title == "Kunskapsportalen" %}
+          <li class="hidden-desktop">
+            <a class="text-md-regular" href="{{ menu.url }}">{{ menu.title }}</a>
+          </li>
+        {% endunless %}
+      {% endfor %}
+    {% endif %}
+  {% endfor %}
+
+
+  <li class="hidden-desktop mb-3">
+    {% if customer.logged_in? %}
+      <a href="{{ customer.profile_url }}" class="btn-tertiary-gray-lg">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path
+            d="M2.5 16.6667C4.44649 14.6021 7.08918 13.3333 10 13.3333C12.9108 13.3333 15.5535 14.6021 17.5 16.6667M13.75 6.25C13.75 8.32107 12.0711 10 10 10C7.92893 10 6.25 8.32107 6.25 6.25C6.25 4.17893 7.92893 2.5 10 2.5C12.0711 2.5 13.75 4.17893 13.75 6.25Z"
+            stroke="#101828" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        {{ 'Profil/logga ut' | t }}
+      </a>
+    {% else %}
+      <a href="{{ customer.login_url }}" class="btn-tertiary-gray-lg">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path
+            d="M2.5 16.6667C4.44649 14.6021 7.08918 13.3333 10 13.3333C12.9108 13.3333 15.5535 14.6021 17.5 16.6667M13.75 6.25C13.75 8.32107 12.0711 10 10 10C7.92893 10 6.25 8.32107 6.25 6.25C6.25 4.17893 7.92893 2.5 10 2.5C12.0711 2.5 13.75 4.17893 13.75 6.25Z"
+            stroke="#101828" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        {{ 'Logga in/registrera dig' | t }}
+      </a>
+    {% endif %}
+
+  </li>
+</ul>
+

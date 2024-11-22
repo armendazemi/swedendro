@@ -1,0 +1,61 @@
+<modal-component id="side-cart" class="side-menu side-menu--right pe-0">
+  <div class="side-cart d-flex flex-column h-100">
+    <div class="side-menu__header">
+      <h3 class="side-menu__title">{{ "Varukorg" | t }}</h3>
+      <button
+        id="close-button"
+        type="button"
+        class="side-menu__close-button icon-button"
+        aria-label="Stäng varukorg"
+        data-modal-action="close"
+        data-modal-element="#side-cart">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 16 16"
+          fill="none">
+          <path
+            d="M12 4L4 12M4 4L12 12"
+            stroke="#030712"
+            stroke-width="1.66667"
+            stroke-linecap="round"
+            stroke-linejoin="round"/>
+        </svg>
+      </button>
+
+      <p class="mb-0 col-12 text-sm" id="side-cart__total-items">
+        {{ cart.order_items.size }}
+        {% if cart.order_items.size > 1 or cart.order_items.size == 0 %}
+          {{ "produkter" | t }}
+        {% else %}
+          {{ "produkt" | t }}
+        {% endif %}
+      </p>
+    </div>
+
+    <div class="side-menu__content d-flex flex-column overflow-y-scroll flex-grow-1">
+      <div class="side-cart__items" id="side-cart__items"></div>
+    </div>
+
+    <div class="side-cart__footer mt-auto py-3 pe-3">
+      <div class="side-cart__subtotal">
+        <div class="row justify-content-between flex-wrap ">
+          <div
+            class="side-cart__subtotal--has-items d-flex flex-wrap {% unless cart.order_items.size > 0 %} d-none {% endunless %}">
+            <p class="text-sm fw-medium  mb-0  col-6">{{ "Subtotal" | t }}</p>
+            <p class="text-sm fw-medium  text-end mb-0  col-6"
+               id="side-cart__total-price">{{ cart.item_total | currency: 2 }}</p>
+            <p class="text-xs text-secondary mb-0  col-6">{{ "Frakt och rabbatkod i nästa steg" | t }}</p>
+          </div>
+
+          <p
+            class="side-cart__subtotal--empty text-sm fw-medium  mb-0 col-6 {% if cart.order_items.size > 0 %} d-none{% endif %} ">{{ "Din varukorg är tom" | t }}</p>
+        </div>
+      </div>
+      <div class="side-cart__cta py-3">
+        <a href="/w/checkout" class="btn-primary-xl text-decoration-none d-block">{{ "Till kassan" | t }}</a>
+      </div>
+    </div>
+  </div>
+</modal-component>

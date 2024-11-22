@@ -1,0 +1,129 @@
+<div class="container spacing-3 flex-col navbar-mobile">
+  <div class="top-navbar d-flex justify-content-between align-items-center">
+    <a href="/"><img src="{{ 'swedendro-logo.png' | asset_path }}" height="24" width="141" alt="{{ site.name }}"/></a>
+    <div class="navbar-icons d-flex justify-content-between align-items-center spacing-md">
+      <button class="btn-secondary-icon"> <!--- account --->
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path
+            d="M2.5 16.6667C4.44649 14.6021 7.08918 13.3333 10 13.3333C12.9108 13.3333 15.5535 14.6021 17.5 16.6667M13.75 6.25C13.75 8.32107 12.0711 10 10 10C7.92893 10 6.25 8.32107 6.25 6.25C6.25 4.17893 7.92893 2.5 10 2.5C12.0711 2.5 13.75 4.17893 13.75 6.25Z"
+            stroke="#101828" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      {%include 'cart_button'%}
+      <toggle-button toggle-attributes="data-modal-action:open,close">
+        <button type="button" class="btn-secondary-icon mobile-menu d-flex d-lg-none"
+                aria-label="{{ "Öppna meny" | t }}" data-modal-overlay="false"
+                aria-expanded="false" aria-haspopup="true" aria-controls="mobile-menu"
+                data-modal-action="open" data-modal-element="#main-menu">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M2.5 10H17.5M2.5 5H17.5M2.5 15H17.5" stroke="#030712" stroke-width="1.66667"
+                  stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+
+          <svg class="d-none " xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"
+               fill="none">
+            <path d="M15 5L5 15M5 5L15 15" stroke="#030712" stroke-width="1.66667" stroke-linecap="round"
+                  stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </toggle-button>
+    </div>
+  </div>
+  <div class="bottom-navbar d-flex">
+    <div class="search-wrapper d-flex align-items-center w-100">
+      <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20"
+           fill="none">
+        <path
+          d="M18 17.5L14.375 13.875M16.3333 9.16667C16.3333 12.8486 13.3486 15.8333 9.66667 15.8333C5.98477 15.8333 3 12.8486 3 9.16667C3 5.48477 5.98477 2.5 9.66667 2.5C13.3486 2.5 16.3333 5.48477 16.3333 9.16667Z"
+          stroke="#344054" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <input type="text" class="w-100 search" placeholder="{{ 'Vad söker du efter?' | t }}"/>
+      <div class="search-response mobile-search-response flex-column"></div>
+    </div>
+  </div>
+</div>
+
+<div class="search-result--mobile d-block d-lg-none d-none">
+  <div class="tabs col-12 d-flex text-align-center">
+    <button type="button" class="search-mobile-tab products-tab active col-6">Produkter</button>
+    <button type="button" class="search-mobile-tab category-tab col-6">Kategorier</button>
+  </div>
+  <div class="search-mobile-tab-content search-mobile-tab-content--products open"></div>
+  <div class="search-mobile-tab-content search-mobile-tab-content--categories d-flex flex-column p-3"></div>
+</div>
+
+
+<top-element>
+  <modal-component id="main-menu">
+    <div class="main-menu--mobile">
+      <div class="d-flex flex-column">
+        {% for group in groups.sortiment.children %}
+          {% assign topmeny_tag_exist = group.tags | select: 'name', 'topmeny' %}
+          {% if topmeny_tag_exist.size > 0 and group.visible? %}
+            {% if group.children.size > 0 %}
+
+              <details class="nav-menu-item-wrapper d-flex flex-column">
+                <summary class="nav-menu-item justify-content-between">
+                  {{ group.name }}
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                    <path d="M5 7.5L10 12.5L15 7.5" stroke="#030712" stroke-width="1.67" stroke-linecap="round"
+                          stroke-linejoin="round"/>
+                  </svg>
+                </summary>
+                <div class="nav-menu-item-wrapper__children">
+                  <a href="{{ group.url }}" class="nav-menu-item nav-menu-item--child">
+                    {{ "Se allt inom" | t }} {{ group.name }}
+                  </a>
+                  {% for child in group.children %}
+                    {% if child.children.size > 0 %}
+                      <div class="nav-item-menu-wrapper--child">
+
+                        <toggle-button class="w-100">
+                          <details>
+                            <summary class="nav-menu-item nav-menu-item--child justify-content-between">
+                              {{ child.name }}
+                              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"
+                                   fill="none">
+                                <path d="M10 4.16663V15.8333M4.16669 9.99996H15.8334" stroke="#030712"
+                                      stroke-width="1.67"
+                                      stroke-linecap="round" stroke-linejoin="round"/>
+                              </svg>
+                              <svg class="d-none" xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                   viewBox="0 0 20 20"
+                                   fill="none">
+                                <path d="M4.16663 10H15.8333" stroke="#030712" stroke-width="1.67"
+                                      stroke-linecap="round"
+                                      stroke-linejoin="round"/>
+                              </svg>
+                            </summary>
+                            <div class="nav-menu-item-wrapper__children">
+                              {% for child in child.children %}
+                                <a href="{{ child.url }}" class="nav-menu-item nav-menu-item--grandchild">
+                                  {{ child.name }}
+                                </a>
+                              {% endfor %}
+                            </div>
+                          </details>
+                        </toggle-button>
+
+                      </div>
+                    {% else %}
+                      <a href="{{ child.url }}" class="nav-menu-item nav-menu-item--child">
+                        {{ child.name }}
+                      </a>
+                    {% endif %} <!-- child.children.size > 0 -->
+                  {% endfor %} <!-- child in group.children -->
+                </div>
+              </details>
+
+            {% else %}
+              <a href="{{ group.url }}" class="nav-menu-item">
+                {{ group.name }}
+              </a>
+            {% endif %} <!-- visible and tag exists -->
+          {% endif %} <!-- group.children.size > 0 -->
+        {% endfor %}
+      </div>
+    </div>
+  </modal-component>
+</top-element>

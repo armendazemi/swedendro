@@ -1,0 +1,78 @@
+{% include 'new_header' %}
+<section class="padding-top-5xl padding-bottom-2xl padding-top-lg-6xl padding-bottom-lg-4xl bg-default">
+  <div class="container">
+    <div class="row">
+      <div class="col-12 col-lg-4 order-2 order-lg-0">
+        <div class="d-flex flex-column row-gap-xl padding-x-xl padding-top-4xl padding-bottom-2xl">
+          {{ 'product-info' | product_editable: class: 'text-secondary d-flex flex-column row-gap-sm product-info' }}
+
+          {% assign disable_buy = groups.inte-bokningsbar.has_product[product.wm3_id] %}
+          {% assign passed_lecture = groups.gamla-kurser.has_product[product.wm3_id] %}
+          {% if disable_buy == false and passed_lecture == false %}
+            <div class="border-t-primary padding-top-xl">
+              <button type="button" aria-label="{{ "Lägg till i varukorgen" | t }}"
+                      class="brand-button-primary button-large" data-action="add-to-cart"
+                      data-variant-id="{{ product.master.id }}" data-quantity="1">
+                {{ "Lägg till i varukorgen" | t }}
+              </button>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="col-12 col-lg-8">
+        <h1 class="display-lg fw-bold padding-y-xl">{{ product.name }}</h1>
+        {{ 'description' | product_editable: class: 'product-single__content d-flex flex-column row-gap-sm ' }}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% capture hasContent %}{{ 'lecturer-heading' | has_product_editable }}{% endcapture %}
+{% if hasContent == 'true' %}
+  <section class="lecture-section padding-y-5xl padding-y-lg-6xl bg-secondary padding-x-lg padding-x-lg-0">
+    <div class="container">
+      <div class="row margin-bottom-2xl margin-bottom-lg-5xl">
+        {{ 'lecturer-heading' | product_editable: class: 'display-md-heading text-lg-p text-secondary d-flex flex-column row-gap-xl' }}
+      </div>
+
+      <div class="row row-gap-5xl">
+        {% for lecturer in lists.forelasare-produkter.rows %}
+          {% for prod in lecturer.produkter %}
+            {% if prod.id == product.master.id %}
+              <div class="col-12 col-lg-6">
+                <div class="lecturer-card d-flex column-gap-2xl">
+                  <div class="lecturer-card__image">
+                    <img class="object-fit-cover radius-full" src="{{ lecturer.bild }}" alt="" height="120" width="120"
+                         style="height: 120px; width: 120px;">
+                  </div>
+
+                  <div class="lecturer-card__content">
+                    <h3 class="lecturer-card__content__name fw-bold">{{ lecturer.namn }}</h3>
+                    <p class="lecturer-card__content__position">{{ lecturer.befattning }}</p>
+                    <p class="text-md text-secondary margin-top-base">{{ lecturer.beskrivning }}</p>
+                  </div>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+{% endif %}
+
+{% if request.params['test'] == 'true' or request.params['id'] %}
+  <section class="video-section padding-top-5xl padding-bottom-2xl padding-top-lg-6xl padding-bottom-lg-4xl bg-default">
+    <div class="container">
+      <div class="row">
+        {{ 'Film' | product_editable: class: 'video-section__content' }}
+      </div>
+    </div>
+  </section>
+{% endif %}
+
+<script src="{{ 'cart_display.js' | template_path }}?{{ version }}" type="module"></script>
+<script src="{{ 'cart_tracker.js' | template_path }}?{{ version }}" type="module"></script>
+
+{% include "new_footer" %}

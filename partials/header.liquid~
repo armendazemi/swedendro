@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="{{ locale }}" style="height: 100%">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {% if seo.description != '' %}
+    <meta name="description" content="{{ seo.description }}">{% endif %}
+  {% if seo.keywords != '' %}
+    <meta name="keywords" content="{{ seo.keywords }}">{% endif %}
+
+  <title>{{ seo.title }}</title>
+
+  {{ wm3 }}
+
+  <!-- Cache busting -->
+  {% assign version = "version=1.011144411" %}
+
+
+  <!-- Styles -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+          crossorigin="anonymous"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"/>
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+  <link href="{{ 'basics.css' | template_path }}?{{ version }}" rel="stylesheet">
+  <link href="{{ 'main.css' | template_path }}?{{ version }}" rel="stylesheet">
+  <link href="{{ 'start_layout.css' | template_path }}?{{ version }}" rel="stylesheet">
+  <link href="{{ 'marylin_style.css' | template_path }}?{{ version }}" rel="stylesheet">
+  <link href="{{ 'checkout.css' | template_path }}?{{ version }}" rel="stylesheet">
+
+  <link rel="alternate" type="application/rss+xml" href="/{{ locale }}/a.rss" title="RSS Feed">
+  <!-- ASSIGN CURRENT VALUE OF SHOWTAXES; IF LOGGED YOU CAN OVERRIDER CUSTOMER SEE TAXES WITH A COOKIE -->
+  {% assign showTaxes = request.cookies.showTaxes | fallback: true %}
+
+  {% if showTaxes == 'true' %}
+    {% assign showTaxes = true %}
+  {% elsif showTaxes == 'false' %}
+    {% assign showTaxes = false %}
+  {% endif %}
+
+  {% if showTaxes == true %}
+    {% assign currency_precision = 0 %}
+  {% elsif showTaxes == false %}
+    {% assign currency_precision = 2 %}
+  {% endif %}
+
+  <script>
+    window.showTaxes = {{ showTaxes }};
+    window.shopCurrency = '{{ store.currency.name }}';
+    var current_locale = "{{ locale }}";
+    window.dataLayer = window.dataLayer || [];
+    window.hasRecaptcha = {{ site.has_recaptcha_enabled }};
+    window.translations = {{ site.translations | jsonify }};
+
+    window.getTranslation = (key) => {
+      return window.translations[key] || key;
+    };
+  </script>
+
+  {% capture chevron_down %}
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+      <path d="M5 7.5L10 12.5L15 7.5" stroke="#101828" stroke-width="1.66667" stroke-linecap="round"
+            stroke-linejoin="round"/>
+    </svg>
+  {% endcapture %}
+</head>
+
+<body style="display: flex; flex-direction: column; height: 100%;">
+<header>
+  <div class="spacing-xl bg-brand navbar-top">
+    <div class="container d-flex justify-content-between">
+      <div class="language-currency d-flex align-items-center spacing-md">
+        <div class="d-flex align-items-center spacing-md toggle-lang-modal">
+          <img src="{{ locale | append: ".png" | asset_path }}"/>
+          <p class="text-sm-bold text-on-brand m-0">{{ locale | upcase }}/{{ store.currency.name | upcase }}</p>
+          {% comment %}CORRECT CURRENCY AND COUNTRY IF LANGUAGE IS NOT MATCHING CURRENT VALUES{% endcomment %}
+          {% for r in lists.sprak-valuta.rows %}
+            {% if r.sprak == locale %}
+              {% if store.currency.name != r.valuta %}
+                <script>
+                  window.location.href = '/{{ r.sprak }}?country={{ r.land }}&currency={{ r.valuta }}';
+                </script>
+              {% endif %}
+            {% endif %}
+          {% endfor %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path d="M5 7.5L10 12.5L15 7.5" stroke="white" stroke-width="1.66667" stroke-linecap="round"
+                  stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="lang-modal spacing-4" id="lang-modal" style="display: none;">
+          <div class="modal-content spacing-md">
+            <div class="close-btn toggle-lang-modal">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M15 5L5 15M5 5L15 15" stroke="#98A2B3" stroke-width="1.66667" stroke-linecap="round"
+                      stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <p class="text-md-medium m-0">{{ 'Skickas till' | t }}</p>
+            <div class="dropdown">
+              <button
+                class="input-button w-100 d-flex justify-content-between align-items-center spacing-2 dropdown-toggle {{ request.path }}"
+                type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <p><img style="margin-right: 0.5rem"
+                        src="{{ locale | append: ".png" | asset_path }}"/>{% for l in site.localized_locales %}{% if l[0] == locale %}{{ l[1] | t }}{% endif %}{% endfor %}
+                </p>
+              </button>
+              {% comment %}IF PAGE IS WEBSHOP/CATALOG PAGE REDIRECT TO CORRESPONDING PAGE IN OTHER LOCALE{% endcomment %}
+              {% if request.path contains 'catalog' %}
+                {% assign current_path = request.path %}
+                {% assign firstPath = request.path | split: '/' %}
+
+
+                {% case firstPath[1] %}
+                  {% when 'sv' %}
+                    {% assign firstPath = request.path | split: '/sv' %}
+                  {% when 'da' %}
+                    {% assign firstPath = request.path | split: '/da' %}
+                  {% when 'no' %}
+                    {% assign firstPath = request.path | split: '/no' %}
+                  {% when 'fi' %}
+                    {% assign firstPath = request.path | split: '/fi' %}
+                {% endcase %}
+
+                {% assign current_path = firstPath[1] %}
+              {% endif %}
+              <ul class="dropdown-menu w-100 align-items-center {{ firstPath.size }}  {{ firstPath[1] }}">
+
+
+                {% for siteLocale in site.localized_locales %}
+                  {% unless siteLocale[0] == locale %}
+                    {% assign locale_img = siteLocale[0] | append: '.png' %}
+
+                    {% case siteLocale[0] %}
+                      {% when 'sv' %}
+                        <li class="{{ firstPath }}">
+                          <a
+                            href="/{{ siteLocale[0] }}{{ current_path }}?{% for r in lists.sprak-valuta.rows %}{% if r.sprak == siteLocale[0] %}country=SE&currency={{ r.valuta }}{% endif %}{% endfor %}"
+                            class="language-select__option  nav-menu-item--primary spacing-4 d-block">
+                            <img style="margin-right: 0.5rem"
+                                 src="{{ siteLocale[0] | append: ".png" | asset_path }}"/> {{ l[1] }}
+                            {{ "SE / SEK" }}
+                          </a>
+                        </li>
+                      {% when 'no' %}
+                        <li class="">
+                          <a
+                            href="/{{ siteLocale[0] }}{{ current_path }}?{% for r in lists.sprak-valuta.rows %}{% if r.sprak == siteLocale[0] %}country={{ r.land }}&currency={{ r.valuta }}{% endif %}{% endfor %}"
+                            class="language-select__option  nav-menu-item--primary {{ current_path }} spacing-4 d-block">
+                            <img style="margin-right: 0.5rem"
+                                 src="{{ siteLocale[0] | append: ".png" | asset_path }}"/> {{ l[1] }}
+                            {{ "NO / NOK" }}
+                          </a>
+                        </li>
+                      {% when 'fi' %}
+                        <li class="">
+                          <a
+                            href="/{{ siteLocale[0] }}{{ current_path }}?{% for r in lists.sprak-valuta.rows %}{% if r.sprak == siteLocale[0] %}country={{ r.land }}&currency={{ r.valuta }}{% endif %}{% endfor %}"
+                            class="language-select__option  nav-menu-item--primary spacing-4 d-block">
+                            <img style="margin-right: 0.5rem"
+                                 src="{{ siteLocale[0] | append: ".png" | asset_path }}"/> {{ l[1] }}
+                            {{ "FI / EUR" }}
+                          </a>
+                        </li>
+                      {% when 'da' %}
+                        <li class="">
+                          <a
+                            href="/{{ siteLocale[0] }}{{ current_path }}?{% for r in lists.sprak-valuta.rows %}{% if r.sprak == siteLocale[0] %}country={{ r.land }}&currency={{ r.valuta }}{% endif %}{% endfor %}"
+                            class="language-select__option  nav-menu-item--primary spacing-4 d-block">
+                            <img style="margin-right: 0.5rem"
+                                 src="{{ siteLocale[0] | append: ".png" | asset_path }}"/> {{ l[1] }}
+                            {{ "DK / DKK" }}
+                          </a>
+                        </li>
+                    {% endcase %}
+
+                  {% endunless %}
+                {% endfor %}
+
+              </ul>
+            </div>
+
+            <p class="text-md-medium">{{ 'Valuta' | t }}</p>
+            <p class="text-md-regular">{{ store.currency.name }} ({{ store.currency.symbol }})</p>
+          </div>
+        </div>
+      </div>
+      {{ 'ups-header' | global_editable: class: "editable-default text-on-brand paragraph-max-width hidden-mobile" }}
+      {{ 'ups-right' | global_editable: class: "editable-default text-on-brand paragraph-max-width hidden-mobile" }}
+
+
+      <div class="" style="display: flex;">
+
+        <div class="customer-type {% if showTaxes == true %}active{% endif %}">
+          <input name="show" type="hidden" value="true">
+          <button class="btn-customer-type btn-customer-type-cookie" data-value="true">{{ 'Ink. moms' | t }}</button>
+        </div>
+        <div class="customer-type {% if showTaxes == false %}active{% endif %}">
+          <button class="btn-customer-type btn-customer-type-cookie" data-value="false">{{ 'Exkl. moms' | t }}</button>
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+  {% capture chevron_right %}
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+      <path d="M7.5 15L12.5 10L7.5 5" stroke="#667085" stroke-width="1.67" stroke-linecap="round"
+            stroke-linejoin="round"/>
+    </svg>
+  {% endcapture %}
+  <div class="container-fluid">
+    {% if request.params.new %}
+      {% include 'new_desktop_menu' %}
+      {% include 'new_mobile_menu' %}
+    {% else %}
+      <!--- mobile nav --->
+      {% include 'mobile_nav' %}
+      <!--- desktop nav --->
+      {% include 'desktop_nav' %}
+    {% endif %}
+  </div>
+</header>
+</div>
+
+
+<overlay-component></overlay-component>
+{%include 'side_cart'%}
+
+<top-element>
+  <section class="content-spacing">

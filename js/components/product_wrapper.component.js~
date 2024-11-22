@@ -1,0 +1,274 @@
+'use strict';
+export default class ProductWrapper extends HTMLElement {
+  constructor() {
+    super();
+    this.variantsFetched = false;
+
+    this.hasVariantSelect = this.querySelector('select') !== null;
+    this.hasSubmitButton = this.querySelector('button[type="submit"]') !== null;
+    this.hasVariantQuantity = this.querySelector('variant-quantity') !== null;
+    this.activeWarehouseId = document.querySelector('[data-active-warehouse-id]').getAttribute('data-active-warehouse-id');
+
+    window.addEventListener('variantchange', this.updateVariantData.bind(this));
+  }
+
+  connectedCallback() {
+    if (this.hasVariantSelect) {
+      const variantSelects = this.querySelectorAll('select');
+      if (variantSelects.length > 1) {
+        console.error('Only one select element is allowed in the product wrapper');
+        return;
+      }
+
+      this.variantSelect = variantSelects[0];
+      this.variantSelect.addEventListener('change', this.handleVariantChange.bind(this));
+      this.fetchVariants();
+    } else {
+      // No variants, only master.
+      this.fetchVariants();
+      window.addEventListener('variantsfetched', this.handleMasterVariant.bind(this));
+    }
+
+    if (this.hasVariantQuantity) {
+      this.variantQuantity = this.querySelector('variant-quantity');
+    }
+
+    if (this.hasSubmitButton) {
+      this.submitButton = this.querySelector('button[type="submit"]');
+      this.submitButton.addEventListener('click', this.handleAddToCart.bind(this));
+    }
+  }
+
+  handleVariantChange(event) {
+    const target = event.target;
+    this.selectedVariantId = target.value;
+
+    if (this.hasVariantQuantity && this.variantsFetched) {
+      const selectedVariantObject = this.variants.find((variant) => {
+        return variant.id === Number(this.selectedVariantId);
+      });
+
+      const maxStock = selectedVariantObject.stock_items.find((stockItem) => {
+        return stockItem.warehouse_id === Number(this.activeWarehouseId);
+      });
+
+
+      if (selectedVariantObject.stock_item.backorderable) {
+        this.variantQuantity.setAttribute('max-stock', 100);
+      } else {
+        this.variantQuantity.setAttribute('max-stock', maxStock.available_quantity);
+      }
+      this.variantQuantity.setAttribute('variant-id', this.selectedVariantId);
+
+      window.dispatchEvent(
+        new CustomEvent('variantchange', {
+          detail: {
+            selectedVariantObject,
+          },
+        })
+      );
+
+
+      if (selectedVariantObject && selectedVariantObject.stock_item.available_quantity > 0 || selectedVariantObject.stock_item.backorderable) {
+        this.submitButton.removeAttribute('disabled');
+      } else {
+        this.submitButton.setAttribute('disabled', '');
+      }
+    }
+  }
+
+  handleMasterVariant(event) {
+    if (!event.detail.variants[0]) {
+      console.error('No variant at index 0, at handleMasterVariant in product_wrapper.component.js');
+      return;
+    }
+    const masterVariant = event.detail.variants[0];
+    this.selectedVariantId = masterVariant.id;
+    const maxStock = masterVariant.stock_items.find((stockItem) => {
+      return stockItem.warehouse_id === Number(this.activeWarehouseId);
+    });
+
+    if (masterVariant.stock_item.backorderable) {
+      this.variantQuantity.setAttribute('max-stock', 100);
+    } else {
+      this.variantQuantity.setAttribute('max-stock', maxStock.available_quantity);
+    }
+    this.variantQuantity.setAttribute('variant-id', this.selectedVariantId);
+
+    window.dispatchEvent(
+      new CustomEvent('variantchange', {
+        detail: {
+          selectedVariantObject: masterVariant,
+        },
+      })
+    );
+  }
+
+  triggerModalEvent() {
+    window.dispatchEvent(
+      new CustomEvent('modalchange', {
+        detail: {
+          action: 'flex',
+          element: '#side-cart',
+          withOverlay: true,
+          initiator: this.submitButton,
+        },
+      })
+    );
+  }
+
+  compareCartState(data) {
+    const currentCartState = JSON.parse(sessionStorage.getItem('cartState'));
+    if (!currentCartState) {
+      window.setCartState(data);
+      return;
+    }
+    const currentCartStateItems = currentCartState.order_items;
+    const newCartStateItems = data.order_items;
+
+    // Check if new items are added
+    const itemsAdded = newCartStateItems.filter((newItem) => {
+      return !currentCartStateItems.some((currentItem) => {
+        return newItem.variant_id === currentItem.variant_id;
+      });
+    });
+
+    // Check if items are updated
+    const itemsUpdated = newCartStateItems.filter((newItem) => {
+      return currentCartStateItems.some((currentItem) => {
+        return newItem.variant_id === currentItem.variant_id && newItem.quantity !== currentItem.quantity;
+      });
+    });
+
+    if (itemsAdded.length > 0 || itemsUpdated.length > 0) {
+      window.setCartState(data);
+      this.triggerModalEvent();
+    }
+  }
+
+  async handleAddToCart(event) {
+    const quantity = Number(this.variantQuantity.querySelector('span').textContent);
+    const currentlySelectedVariantId = this.selectedVariantId;
+
+    var gravyrTextElement = document.querySelector('#gravyrText');
+    var gravyrStilElement = document.querySelector('#gravyrStil');
+
+    const gravyrTextValue = gravyrTextElement ? gravyrTextElement.value : '';
+    const gravyrStilValue = gravyrStilElement ? gravyrStilElement.value : '';
+
+
+    const url = '/w/cart/order_items?associations[]=variant';
+
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        order_items: [
+          {
+            variant_id: currentlySelectedVariantId,
+            quantity: quantity,
+            attributes: {
+              dynamic_fields: {
+                gravyrtext: {
+                  value: gravyrTextValue
+                },
+                gravyrstil: {
+                  value: gravyrStilValue
+                }
+              }
+            }
+          },
+        ],
+      }),
+    });
+
+    if (!response.ok) {
+      console.error('Failed to add item to cart');
+      return;
+    }
+    const data = await response.json();
+    this.compareCartState(data);
+  }
+
+  async fetchVariants() {
+    const productId = window.location.pathname.split('/').pop();
+    const url = `/api/v1/shop/products/${productId}/variants?stock_items=true`;
+
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!response.ok) {
+      console.error('Failed to fetch variants, in product wrapper component');
+      return;
+    }
+
+    const data = await response.json();
+    this.variants = data.variants;
+    this.variantsFetched = true;
+    window.dispatchEvent(
+      new CustomEvent('variantsfetched', {
+        detail: {
+          variants: this.variants,
+        },
+      })
+    );
+  }
+
+  updateVariantData(event) {
+
+    const selectedVariantObject = event.detail.selectedVariantObject;
+    if (!selectedVariantObject) {
+      console.error('Failed to update variant data, in product wrapper component, no selectedVariantObject found.');
+    }
+
+    const productPriceElement = document.querySelector('.product-single__price');
+    const productSkuElement = document.querySelector('.product-single__sku');
+
+    console.log('selectedVariantObject', selectedVariantObject.current_price);
+
+    if (selectedVariantObject.current_price) {
+      // Determine which price to use based on whether taxes are shown or not
+      const amountToDisplay = showTaxes ? selectedVariantObject.current_price.after_tax_amount : selectedVariantObject.current_price.pre_tax_amount;
+
+
+      if (Number(selectedVariantObject.best_price.amount) < Number(selectedVariantObject.current_price.amount)) {
+        // Determine which price to use based on whether taxes are shown or not
+        const bestPriceToDisplay = showTaxes ? selectedVariantObject.best_price.after_tax_amount : selectedVariantObject.best_price.pre_tax_amount;
+
+        const ogPrice = Number(amountToDisplay).toLocaleString('se-SE', {
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0
+        });
+        const discountedPrice = Number(bestPriceToDisplay).toLocaleString('se-SE', {
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0
+        });
+        productPriceElement.innerHTML = `
+        <p class="product-single__price display-sm text-tertiary text-decoration-line-through mb-0">${ogPrice} kr</p>
+        <p class="product-single__price display-sm fw-bold text-campaign mb-0">${discountedPrice} kr</p>
+      `;
+      } else {
+        const price = Number(amountToDisplay).toLocaleString('se-SE', {
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0
+        });
+        productPriceElement.innerHTML = `
+        <p class="product-single__price display-sm fw-bold text-primary mb-0">${price} kr</p>
+        `;
+      }
+
+    }
+
+
+
+    productSkuElement.textContent = selectedVariantObject.sku;
+  }
+}
+
+customElements.define('product-wrapper', ProductWrapper);

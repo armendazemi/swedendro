@@ -1,0 +1,21 @@
+<cart-button>
+  <button id="open-cart-button" type="button" class="icon-button d-flex aling-items-center position-relative"
+          aria-expanded="false" aria-label="{{ "Öppna varukorg" | t }}"
+          aria-haspopup="true" aria-controls="side-cart" data-modal-action="flex" data-modal-element="#side-cart">
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+      <g clip-path="url(#clip0_12780_208)">
+        <path
+          d="M1.6665 1.66663H2.75497C2.95999 1.66663 3.0625 1.66663 3.14499 1.70433C3.21769 1.73755 3.27929 1.79098 3.32246 1.85825C3.37145 1.93458 3.38595 2.03606 3.41494 2.23901L3.80936 4.99996M3.80936 4.99996L4.68594 11.4428C4.79718 12.2604 4.85279 12.6692 5.04825 12.9769C5.22049 13.2481 5.46741 13.4637 5.7593 13.5978C6.09056 13.75 6.50312 13.75 7.32826 13.75H14.4598C15.2453 13.75 15.638 13.75 15.959 13.6086C16.242 13.484 16.4847 13.2832 16.6601 13.0285C16.8589 12.7396 16.9324 12.3538 17.0794 11.5823L18.1824 5.79137C18.2342 5.5198 18.26 5.38401 18.2225 5.27788C18.1897 5.18477 18.1248 5.10636 18.0395 5.05664C17.9422 4.99996 17.804 4.99996 17.5275 4.99996H3.80936ZM8.33317 17.5C8.33317 17.9602 7.96007 18.3333 7.49984 18.3333C7.0396 18.3333 6.6665 17.9602 6.6665 17.5C6.6665 17.0397 7.0396 16.6666 7.49984 16.6666C7.96007 16.6666 8.33317 17.0397 8.33317 17.5ZM14.9998 17.5C14.9998 17.9602 14.6267 18.3333 14.1665 18.3333C13.7063 18.3333 13.3332 17.9602 13.3332 17.5C13.3332 17.0397 13.7063 16.6666 14.1665 16.6666C14.6267 16.6666 14.9998 17.0397 14.9998 17.5Z"
+          stroke="#030712" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+      </g>
+      <defs>
+        <clipPath id="clip0_12780_208">
+          <rect width="20" height="20" fill="white"/>
+        </clipPath>
+      </defs>
+    </svg>
+    <span class="open-cart-button__title d-none d-lg-block button-lg fw-semi">{{ "Varukorg" | t }}</span>
+    <span
+      class="side-cart-button__count counter-badge bg-dark-background {% if cart.item_count == 0 or cart.item_count == "" %}d-none{% endif %}">{{ cart.item_count }}</span>
+  </button>
+</cart-button>

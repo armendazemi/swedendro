@@ -1,0 +1,266 @@
+<form-component modal="#addedToCartModal">
+  <form action="/w/cart" method="post">
+    {% if product.has_variants? %}
+
+
+      {% if product.option_types.size > 1 %}
+        {% if product.option_types[0] %}
+          <div class="product-single__selection mb-3">
+            <select class="default-select handle-option-selection" id="selection-1"
+                    title="{{ "Välj" | t }} {{ product.option_types[0].presentation }}"
+                    data-option="{{ product.option_types[0].presentation }}">
+              <option
+                class="default-select__option"
+                value=""
+                selected
+                disabled>{{ "Välj" | t }} {{ product.option_types[0].presentation }}</option>
+              {% for option_value in product.option_types[0].values %}
+                <option value="{{ option_value.id }}">{{ option_value.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        {% endif %}
+
+        {% if product.option_types[1] %}
+          <div class="product-single__selection mb-3">
+            <select class="default-select handle-option-selection" id="selection-2"
+                    title="{{ "Välj" | t }} {{ product.option_types[1].presentation }}"
+                    data-option="{{ product.option_types[1].presentation }}">
+              <option
+                class="default-select__option"
+                value=""
+                selected
+                disabled>{{ "Välj" | t }} {{ product.option_types[1].presentation }}</option>
+              {% for option_value in product.option_types[1].values %}
+                <option value="{{ option_value.id }}" data-option-1="">{{ option_value.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        {% endif %}
+
+        {% if product.option_types[2] %}
+          <div class="product-single__selection mb-3">
+            <select class="default-select handle-option-selection" id="selection-3"
+                    title="{{ "Välj" | t }} {{ product.option_types[2].presentation }}"
+                    data-option="{{ product.option_types[2].presentation }}">
+              <option
+                class="default-select__option"
+                value=""
+                selected
+                disabled>{{ "Välj" | t }} {{ product.option_types[2].presentation }}</option>
+              {% for option_value in product.option_types[2].values %}
+                <option value="{{ option_value.id }}">{{ option_value.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        {% endif %}
+      {% endif %}
+
+
+      <div class="product-single__selection mt-3 mb-3 {% if product.option_types.size > 1 %}d-none{% endif %}">
+        <label for="select-variant-option-1"
+               class="fw-bold">{{ "Välj" | t }}  {{ product.option_types[0].presentation }}</label>
+        <select id="variantSelect" class="default-select handle-variant-selection"
+                title="{{ "Välj" | t }}  {{ product.option_types[0].presentation }}" id="select-variant-option-1">
+          <option
+            class="default-select__option"
+            value=""
+            selected
+            disabled
+            data-variant-sku="{{ product.master.sku }}"
+            data-in-stock="none"
+            data-on-sale="false"
+            data-discount="0"
+            data-price="{% if showTaxes == true %}{{ variant.prices.current.after_tax_amount | currency: currency_precision }}{% else %}{{ variant.prices.current.pre_tax_amount | currency: currency_precision }}{% endif %}"
+          >{{ "Välj" | t }} {{ product.option_types[0].presentation }}</option>
+          {% for v in product.variants %}
+            <option
+              value="{{ v.id }}"
+              {% for o in v.option_values %}data-{{ o.option_type.presentation }}="{{ o.id }}" {% endfor %}
+              data-variant-id="{{ v.id }}"
+              data-variant-sku="{{ v.sku }}"
+              data-in-stock="{{ v.stock_item.in_stock? }}"
+              data-in-stock-delivery-message="{{ v.stock_item.delivery_time_in_stock | t }}"
+              data-out-of-stock-delivery-message="{{ v.stock_item.out_of_stock_message | t }}"
+              data-backorderable-delivery-message="{{ v.stock_item.delivery_time_out_of_stock | t }}"
+              data-backorderable="{{ v.stock_item.backorderable }}"
+              data-price="{% if showTaxes == true %}{{ v.prices.current.after_tax_amount | currency: currency_precision }}{% else %}{{ v.prices.current.pre_tax_amount | currency: currency_precision }}{% endif %}"
+              data-on-sale="{{ v.prices.sale.exists? }}"
+              data-sale-price="{% if showTaxes == true %}{{ v.prices.sale.after_tax_amount | currency: currency_precision }}{% else %}{{ v.prices.sale.pre_tax_amount | currency: currency_precision }}{% endif %}"
+              data-discount="{{ v.prices.sale.discount | fallback: 0 | round }}"
+            {% for o in v.option_values %}data-{{ o.option_type.presentation }}="{{ o.id }}" {% endfor %}
+            >
+              {% for o in v.option_values %}
+                {{ o.presentation }}{% unless forloop.last %}|{% endunless %}
+              {% endfor %}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+    {% endif %}
+
+    <div class="d-flex gap-3">
+      <div class="variant-quantity__wrapper">
+        <button
+          data-action="decrement"
+          type="button"
+          class="variant-quantity__decrement"
+          title="{{ "Minska" | t }}">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none">
+            <path
+              d="M5 12H19"
+              stroke="#030712"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"/>
+          </svg>
+        </button>
+
+        <input class="variant-quantity__value" name="order_item[quantity]" value="1" readonly>
+
+        <button
+          data-action="increment"
+          type="button"
+          class="variant-quantity__increment"
+          title="{{ "Öka" | t }}">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none">
+            <path
+              d="M12 5V19M5 12H19"
+              stroke="#030712"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+
+
+      {% if product.has_variants? %}
+
+      {% else %}
+        {% assign backorderable = variant.stock_item.backorderable %}
+        {% assign in_stock = variant.in_stock? %}
+
+      {% endif %}
+
+
+      <button type="submit" id="btn-add-to-cart" class="btn-primary-lg col-12 text-center flex-fill"
+              {% if in_stock == false and backorderable == false %}disabled{% elsif product.has_variants? %}disabled{% endif %}>
+        {{ "Lägg i varukorg" | t }}
+      </button>
+    </div>
+
+    <div class="product-stock-state mt-2">
+      <p id="product-in-stock-state" {% if in_stock %}class="active"{% endif %}>
+        <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8" fill="none">
+          <circle cx="4" cy="4" r="3" fill="#17B26A"/>
+        </svg>
+        <span id="delivery-message-in-stock">{{ variant.stock_item.delivery_time_in_stock | t }}</span>
+      </p>
+      <p id="product-not-in-stock-state"
+         {% if in_stock == false and backorderable == false %}class="active"{% endif %}>
+        <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8" fill="none">
+          <circle cx="4" cy="4" r="3" fill="#F04438"/>
+        </svg>
+        <span id="delivery-message-out-of-stock">{{ variant.stock_item.out_of_stock_message | t }}</span>
+      </p>
+      <p id="product-backorderable-stock-state"
+         {% if in_stock == false and backorderable == true %}class="active"{% endif %}>
+        {% if variant.stock_item.delivery_time_out_of_stock contains 'I lager' %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8" fill="none">
+            <circle cx="4" cy="4" r="3" fill="#17B26A"/>
+          </svg>
+        {% else %}
+          <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8" fill="none">
+            <circle cx="4" cy="4" r="3" fill="#f0aa38"/>
+          </svg>
+        {% endif %}
+        <span id="delivery-message-backorderable-stock">{{ variant.stock_item.delivery_time_out_of_stock | t }}</span>
+      </p>
+    </div>
+
+    <input name="order_item[variant_id]" id="variant_id" type="hidden" value="{{ product.master_or_variant.id }}">
+  </form>
+</form-component>
+
+
+<modal-component id="addedToCartModal" class="form-popup-modal form-popup-modal--500px">
+  <div class="default-modal">
+    <div class="default-modal__header d-flex margin-bottom-3xs justify-content-between align-items-center">
+      <p class="text-md-semibold">{{ "Tillagd produkt" | t }}</p>
+      <button
+        id="close-button"
+        type="button"
+        class="icon-button"
+        aria-label="Stäng varukorg"
+        data-modal-action="close"
+        data-modal-element="#addedToCartModal">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 16 16"
+          fill="none">
+          <path
+            d="M12 4L4 12M4 4L12 12"
+            stroke="#030712"
+            stroke-width="1.66667"
+            stroke-linecap="round"
+            stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <div class="default-modal__body">
+      <div class="d-flex gap-3">
+        <img src="{{ product.first_image.small }}" alt="{{ product.name }}" height="96" width="96">
+        <div class="d-flex flex-column row-gap-1">
+          <p class="mb-0 text-sm-regular">{{ product.groups.breadcrumbs_for_varumarken[1].name }}</p>
+          <p class="mb-0 text-sm-bold">{{ product.name }}</p>
+          <p class="mb-0 text-sm-regular d-none modal-option-1"></p>
+          <p class="mb-0 text-sm-regular d-none modal-option-2"></p>
+          <div class="d-flex justify-content-between align-items-start">
+            <p class="mb-0 text-sm-regular d-none modal-sku"></p>
+            <div class="d-flex flex-column row-gap-1">
+              <p class="mb-0 text-sm-bold product-price m-0" id="product-price"
+                 {% if product.prices.sale.exists? or product.prices.current.discount_list? == true %}style="display: none;"{% endif %}>
+                {% if showTaxes == true %}{{ variant.prices.current.after_tax_amount | currency: currency_precision }}{% else %}{{ variant.prices.current.pre_tax_amount | currency: currency_precision }}{% endif %}
+              </p>
+              <p class="mb-0 text-sm-bold product-campaign-price  m-0" id="product-sale-price"
+                 {% unless product.prices.sale.exists? or product.prices.current.discount_list? == true %}style="display: none;"{% endunless %}>
+                {% if product.prices.sale.amount > 0 %}
+                  {% if showTaxes == true %}{{ variant.prices.sale.after_tax_amount | currency: currency_precision }}{% else %}{{ variant.prices.sale.pre_tax_amount | currency: currency_precision }}{% endif %}
+                {% else %}
+                  {% if showTaxes == true %}{{ variant.prices.current.after_tax_amount | currency: currency_precision }}{% else %}{{ variant.prices.current.pre_tax_amount | currency: currency_precision }}{% endif %}
+                {% endif %}
+              </p>
+              <p class="mb-0 text-sm stroke product-price  m-0" id="product-original-price"
+                 {% unless product.prices.sale.exists? or product.prices.current.discount_list? == true %}style="display: none;"{% endunless %}>
+                {% if showTaxes == true %}{{ variant.prices.default.after_tax_amount | currency: currency_precision }}{% else %}{{ variant.prices.default.pre_tax_amount | currency: currency_precision }}{% endif %}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="default-modal__footer mt-4 d-flex">
+      <button
+        type="button"
+        class="btn-primary-lg col-12 text-center flex-fill"
+        data-modal-action="close"
+        data-modal-element="#addedToCartModal">{{ "Tillbaka till hemsidan" | t }}</button>
+    </div>
+  </div>
+</modal-component>
+

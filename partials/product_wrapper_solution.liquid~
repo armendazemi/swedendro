@@ -1,0 +1,90 @@
+<product-wrapper>
+  {% for optionType in product.option_types %}
+    <div class="product-single__selection">
+      <select class="default-select" title="{{ "Välj" | t }} {{ optionType.presentation }}">
+        <option
+          class="default-select__option"
+          value=""
+          selected
+          disabled>{{ "Välj" | t }} {{ optionType.presentation }}</option>
+        {% for option_value in optionType.values %}
+          <option data-option-value="{{ option_value.value }}" data-option-type="{{ optionType.id }}">{{ option_value.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  {% endfor %}
+
+
+  <variant-quantity>
+    <p class="mb-0 text-sm fw-medium text-primary">
+      {{ "Välj antal" | t }}
+    </p>
+    <div class="variant-quantity__wrapper">
+      <button
+        data-action="decrement"
+        type="button"
+        class="variant-quantity__decrement"
+        title="{{ "Minska" | t }}">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none">
+          <path
+            d="M5 12H19"
+            stroke="#030712"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"/>
+        </svg>
+      </button>
+
+      <span class="variant-quantity__value">1</span>
+
+      <button
+        data-action="increment"
+        type="button"
+        class="variant-quantity__increment"
+        title="{{ "Öka" | t }}">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none">
+          <path
+            d="M12 5V19M5 12H19"
+            stroke="#030712"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+  </variant-quantity>
+
+  <button
+    type="submit"
+    class="brand-button-primary button-large fw-semi text-white "
+  {% if product.variants.size > 1 %}
+    disabled
+    {% endif %}>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="21"
+      height="20"
+      viewBox="0 0 21 20"
+      fill="none">
+      <path
+        d="M2.16675 1.66669H3.25522C3.46023 1.66669 3.56274 1.66669 3.64523 1.70439C3.71793 1.73761 3.77954 1.79104 3.82271 1.85831C3.87169 1.93464 3.88619 2.03612 3.91518 2.23907L4.30961 5.00002M4.30961 5.00002L5.18618 11.4429C5.29742 12.2605 5.35304 12.6693 5.5485 12.977C5.72073 13.2481 5.96765 13.4637 6.25954 13.5978C6.5908 13.75 7.00337 13.75 7.8285 13.75H14.9601C15.7455 13.75 16.1383 13.75 16.4592 13.6087C16.7422 13.4841 16.985 13.2832 17.1603 13.0285C17.3592 12.7397 17.4327 12.3539 17.5796 11.5823L18.6827 5.79143C18.7344 5.51986 18.7603 5.38408 18.7228 5.27794C18.6899 5.18483 18.625 5.10642 18.5397 5.0567C18.4425 5.00002 18.3042 5.00002 18.0278 5.00002H4.30961ZM8.83341 17.5C8.83341 17.9603 8.46032 18.3334 8.00008 18.3334C7.53984 18.3334 7.16675 17.9603 7.16675 17.5C7.16675 17.0398 7.53984 16.6667 8.00008 16.6667C8.46032 16.6667 8.83341 17.0398 8.83341 17.5ZM15.5001 17.5C15.5001 17.9603 15.127 18.3334 14.6667 18.3334C14.2065 18.3334 13.8334 17.9603 13.8334 17.5C13.8334 17.0398 14.2065 16.6667 14.6667 16.6667C15.127 16.6667 15.5001 17.0398 15.5001 17.5Z"
+        stroke="white"
+        stroke-width="1.66667"
+        stroke-linecap="round"
+        stroke-linejoin="round"/>
+    </svg>
+    {{ "Lägg till" | t }}
+  </button>
+
+  {% include 'stock_info' %}
+</product-wrapper>

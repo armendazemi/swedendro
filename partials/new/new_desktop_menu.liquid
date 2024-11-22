@@ -1,0 +1,113 @@
+<div class="container spacing-3 flex-col navbar-desktop" id="mobile-nav-wrapper">
+  <div class="top-navbar d-flex justify-content-between align-items-center spacing-lg hidden-mobile">
+    <a href="/{% if locale != 'sv' %}{{ locale }}{% endif %}"><img src="{{ 'swedendro-logo.png' | asset_path }}"
+                                                                   height="32" width="191" alt="{{ site.name }}"/></a>
+    <form accept-charset="UTF-8" action="/{{ locale }}/catalog/products"
+          class="search-wrapper d-flex align-items-center w-100" style="max-width: 660px">
+      <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20"
+           fill="none">
+        <path
+          d="M18 17.5L14.375 13.875M16.3333 9.16667C16.3333 12.8486 13.3486 15.8333 9.66667 15.8333C5.98477 15.8333 3 12.8486 3 9.16667C3 5.48477 5.98477 2.5 9.66667 2.5C13.3486 2.5 16.3333 5.48477 16.3333 9.16667Z"
+          stroke="#344054" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <input type="text" name="search" class="w-100 search" placeholder="{{ 'Vad söker du efter?' | t }}"/>
+    </form>
+    <div class="navbar-icons d-flex justify-content-between align-items-center spacing-md">
+      {% if customer.logged_in? %}
+        <a href="{{ customer.profile_url }}" class="btn-tertiary-gray-lg">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path
+              d="M2.5 16.6667C4.44649 14.6021 7.08918 13.3333 10 13.3333C12.9108 13.3333 15.5535 14.6021 17.5 16.6667M13.75 6.25C13.75 8.32107 12.0711 10 10 10C7.92893 10 6.25 8.32107 6.25 6.25C6.25 4.17893 7.92893 2.5 10 2.5C12.0711 2.5 13.75 4.17893 13.75 6.25Z"
+              stroke="#101828" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          {{ 'Profil/logga ut' | t }}
+        </a>
+      {% else %}
+        <a href="{{ customer.login_url }}" class="btn-tertiary-gray-lg">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+            <path
+              d="M2.5 16.6667C4.44649 14.6021 7.08918 13.3333 10 13.3333C12.9108 13.3333 15.5535 14.6021 17.5 16.6667M13.75 6.25C13.75 8.32107 12.0711 10 10 10C7.92893 10 6.25 8.32107 6.25 6.25C6.25 4.17893 7.92893 2.5 10 2.5C12.0711 2.5 13.75 4.17893 13.75 6.25Z"
+              stroke="#101828" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          {{ 'Logga in/registrera dig' | t }}
+        </a>
+      {% endif %}
+      {%include 'cart_button'%}
+    </div>
+  </div>
+</div>
+
+<top-element>
+  <div class="search-result search-result--desktop d-flex ">
+    <div class="col-xl-3 search-result__categories">
+      <h4>{{ "Kategorier" | t }}</h4>
+      <div class="categories d-flex flex-column">
+
+      </div>
+    </div>
+    <div class="col-xl-9 search-result__products">
+      <h4>{{ 'Produkter' | t }}</h4>
+      <div class="products d-flex flex-wrap"></div>
+
+      <form action="/{{ locale }}/catalog/products" method="get" class="search-form d-none justify-content-center mt-3">
+        <input type="text" name="search" hidden="true" class="search-form-input">
+        <button class="btn-primary-lg w-100" type="submit">{{ "Visa fler produkter" | t }}</button>
+      </form>
+    </div>
+  </div>
+</top-element>
+
+<div class="container">
+  <div class="main-menu--desktop d-none d-lg-flex ">
+    {% for group in groups.sortiment.children %}
+      {% assign topmeny_tag_exist = group.tags | select: 'name', 'topmeny' %}
+      {% if topmeny_tag_exist.size > 0 and group.visible? %}
+        <button class="btn-tertiary-gray" type="button"
+                data-modal-element="#menu-drop-{{ forloop.index }}"
+                data-modal-action="open" data-action-toggle="true" data-modal-overlay="true" data-z-index="1000"
+                data-z-element="header">
+          {{ group.name }}
+        </button>
+
+        <!--- Modal menus --->
+        <top-element>
+          <modal-component id="menu-drop-{{ forloop.index }}">
+            <div class="main-menu--desktop__dropdown">
+              <div class="container">
+                <div class="row row-gap-sm">
+                  <div class="col" style="padding-top: 24px; padding-bottom: 24px;">
+                    <a href="{{ group.url }}"
+                       class="text-xl-medium d-block mb-3 main-menu--desktop__dropdown__title"
+                       title="{{ group.name }}">{{ "Se allt inom" | t }} {{ group.name }}</a>
+                    <div class="main-menu--desktop__dropdown__content row row-gap-3">
+                      {% for child in group.children %}
+                        {% if child.visible? %}
+                          <div class="col-4">
+                            <ul class="main-menu--desktop__dropdown__content__group d-flex flex-column list-style-none">
+                              <li class="mb-3">
+                                <a href="{{ child.url }}"
+                                   class="subtitle2 text-md-semibold "
+                                   title="{{ child.name }}"> {{ child.name }}</a>
+                              </li>
+
+                              {% for grandchild in child.children %}
+                                <li class="text-sm-regular py-1">
+                                  <a href="{{ grandchild.url }}"
+                                     title="{{ grandchild.name }}"> {{ grandchild.name }}</a>
+                                </li>
+                              {% endfor %}
+                            </ul>
+                          </div>
+                        {% endif %}
+                      {% endfor %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </modal-component>
+        </top-element>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>

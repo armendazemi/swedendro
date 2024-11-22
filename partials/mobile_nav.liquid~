@@ -1,0 +1,193 @@
+<div class="container spacing-3 flex-col navbar-mobile">
+  <div class="top-navbar d-flex justify-content-between align-items-center">
+    <a href="/"><img src="{{ 'swedendro-logo.png' | asset_path }}" height="24" width="141" alt="{{ site.name }}"/></a>
+    <div class="navbar-icons d-flex justify-content-between align-items-center spacing-md">
+      <button class="btn-secondary-icon"> <!--- account --->
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <path
+            d="M2.5 16.6667C4.44649 14.6021 7.08918 13.3333 10 13.3333C12.9108 13.3333 15.5535 14.6021 17.5 16.6667M13.75 6.25C13.75 8.32107 12.0711 10 10 10C7.92893 10 6.25 8.32107 6.25 6.25C6.25 4.17893 7.92893 2.5 10 2.5C12.0711 2.5 13.75 4.17893 13.75 6.25Z"
+            stroke="#101828" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </button>
+      <button class="btn-secondary-icon"> <!--- cart --->
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+          <g clip-path="url(#clip0_8502_5622)">
+            <path
+              d="M1.66675 1.66669H2.75522C2.96023 1.66669 3.06274 1.66669 3.14523 1.70439C3.21793 1.73761 3.27954 1.79104 3.32271 1.85831C3.37169 1.93464 3.38619 2.03612 3.41518 2.23907L3.80961 5.00002M3.80961 5.00002L4.68618 11.4429C4.79742 12.2605 4.85304 12.6693 5.0485 12.977C5.22073 13.2481 5.46765 13.4637 5.75954 13.5978C6.0908 13.75 6.50337 13.75 7.3285 13.75H14.4601C15.2455 13.75 15.6383 13.75 15.9592 13.6087C16.2422 13.4841 16.485 13.2832 16.6603 13.0285C16.8592 12.7397 16.9327 12.3539 17.0796 11.5823L18.1827 5.79143C18.2344 5.51986 18.2603 5.38408 18.2228 5.27794C18.1899 5.18483 18.125 5.10642 18.0397 5.0567C17.9425 5.00002 17.8042 5.00002 17.5278 5.00002H3.80961ZM8.33341 17.5C8.33341 17.9603 7.96032 18.3334 7.50008 18.3334C7.03984 18.3334 6.66675 17.9603 6.66675 17.5C6.66675 17.0398 7.03984 16.6667 7.50008 16.6667C7.96032 16.6667 8.33341 17.0398 8.33341 17.5ZM15.0001 17.5C15.0001 17.9603 14.627 18.3334 14.1667 18.3334C13.7065 18.3334 13.3334 17.9603 13.3334 17.5C13.3334 17.0398 13.7065 16.6667 14.1667 16.6667C14.627 16.6667 15.0001 17.0398 15.0001 17.5Z"
+              stroke="#101828" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+          </g>
+          <defs>
+            <clipPath id="clip0_8502_5622">
+              <rect width="20" height="20" fill="white"/>
+            </clipPath>
+          </defs>
+        </svg>
+      </button>
+      <button class="btn-secondary-icon mobile-menu" id="toggle-mobile-menu"> <!--- menu --->
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M3 12H21M3 6H21M3 18H21" stroke="#344054" stroke-width="2" stroke-linecap="round"
+                stroke-linejoin="round"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+  <div class="bottom-navbar d-flex">
+    <div class="search-wrapper d-flex align-items-center w-100">
+      <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="21" height="20" viewBox="0 0 21 20"
+           fill="none">
+        <path
+          d="M18 17.5L14.375 13.875M16.3333 9.16667C16.3333 12.8486 13.3486 15.8333 9.66667 15.8333C5.98477 15.8333 3 12.8486 3 9.16667C3 5.48477 5.98477 2.5 9.66667 2.5C13.3486 2.5 16.3333 5.48477 16.3333 9.16667Z"
+          stroke="#344054" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <input type="text" class="w-100 search" placeholder="{{ 'Vad söker du efter?' | t }}"/>
+      <div class="search-response mobile-search-response flex-column"></div>
+    </div>
+  </div>
+</div>
+
+{% capture placeholder %}
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+    <path
+      d="M6.33657 3.83633C7.78312 2.38978 8.50639 1.6665 9.40516 1.6665C10.3039 1.6665 11.0272 2.38978 12.4738 3.83633L16.1561 7.51864C17.6026 8.96519 18.3259 9.68846 18.3259 10.5872C18.3259 11.486 17.6026 12.2093 16.1561 13.6558C14.7095 15.1024 13.9862 15.8256 13.0875 15.8256C12.1887 15.8256 11.4654 15.1024 10.0189 13.6558L6.33657 9.97351C4.89002 8.52696 4.16675 7.80369 4.16675 6.90492C4.16675 6.00615 4.89002 5.28288 6.33657 3.83633Z"
+      fill="#13263E"/>
+    <g opacity="0.5">
+      <path
+        d="M6.95396 10.5911L2.35492 15.1902C2.06955 15.4756 1.92687 15.6182 1.84117 15.7667C1.60861 16.1695 1.60861 16.6658 1.84117 17.0686C1.92687 17.217 2.06955 17.3597 2.3549 17.645C2.64027 17.9304 2.78298 18.0731 2.93141 18.1588C3.33422 18.3914 3.8305 18.3914 4.23331 18.1588C4.38174 18.0731 4.52443 17.9304 4.8098 17.6451L9.40884 13.046L6.95396 10.5911Z"
+        fill="#13263E"/>
+      <path
+        d="M15.546 6.90884L15.8567 6.59813C16.1421 6.31276 16.2848 6.17007 16.3705 6.02164C16.603 5.61883 16.603 5.12255 16.3705 4.71974C16.2848 4.57131 16.1421 4.42862 15.8567 4.14325C15.5714 3.85788 15.4287 3.7152 15.2802 3.6295C14.8774 3.39694 14.3812 3.39694 13.9783 3.6295C13.8299 3.7152 13.6872 3.85788 13.4019 4.14325L13.0911 4.45396L15.546 6.90884Z"
+        fill="#13263E"/>
+    </g>
+  </svg>
+{% endcapture %}
+{% capture go_back %}
+  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+    <path d="M16.6668 10H3.3335M3.3335 10L8.3335 15M3.3335 10L8.3335 5" stroke="#101828" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+{% endcapture %}
+
+{% comment %}
+<div class="mobile-nav-items"  style="display: none;">
+  <div class="mobile-nav-items-level-1 d-flex flex-column">
+    {%for group in groups.root_items%}
+      {%unless group.id == 20514 or group.id == 20513 %}
+        <a href="{{group.url}}" class="mobile-nav-item-level-1 btn-secondary-lg borderless">{{group.name}}</a>
+      {% endunless %}
+    {%endfor%}
+    <hr />
+    {%for child in groups.vart-sortiment.children%}
+      {%if child.children.size > 0%}
+       <button class="mobile-nav-item nav-item-level-1 btn-secondary-lg borderless justify-content-between" data-parent-id="{{child.id}}" data-nav-level="2"><span>
+                {%if child.image_url.size > 0%}
+                  <img src="{{child.image_url}}" height="24" width="24"/>
+                  {{child.name}}
+                {%else%}
+                {{placeholder}}
+                {{child.name}}
+                {%endif%}
+                </span>{{chevron_right}}</button>
+      {%else%}
+       <a href="{{child.url}}" class="mobile-nav-item-level-1 btn-secondary-lg borderless"data-child-to-parent-id="{{child.id}}"><span>
+                {%if child.image_url.size > 0%}
+                  <img src="{{child.image_url}}" height="24" width="24"/>
+                {%else%}
+                  {{placeholder}}
+                {%endif%}
+                </span>{{child.name}}</a>
+      {%endif%}
+    {%endfor%}
+    <hr />
+      {%for group in groups.all%}
+        {%if group.id == 20514%}
+          <a href="{{group.url}}" class="btn-secondary-lg borderless">
+            <span>
+                {%if child.image_url.size > 0%}
+                  <img src="{{child.image_url}}" height="24" width="24"/>
+                {%else%}
+                  {{placeholder}}
+                {%endif%}
+                </span>
+                {{group.name}}</button>
+        {%endif%}
+      {%endfor%}
+    {%for page in site.all_pages%}
+        {%if page.id == 39924%}
+          {%for menu in page.children%}
+            {%if menu.visible_menu?%}
+              <a href="{{menu.url}}" class="btn-secondary-lg borderless page-links">
+                <span>
+                  {%if child.image_url.size > 0%}
+                    <img src="{{menu.image_url}}" height="24" width="24"/>
+                  {%else%}
+                    {{placeholder}}
+                  {%endif%}
+                </span>{{menu.title}}</a>
+            {%endif%}
+          {%endfor%}
+        {%endif%}
+      {% endfor %}
+      <div class="customer-type d-flex spacing-xl mobile-customer-type">
+        {% unless customer.logged_in? %}
+          {% wm3form customer.show_taxes_url, class="show-taxes" %}
+            <input name="show" type="hidden" value="false">
+            <button type="submit" class="foretag d-flex flex-column align-items-start link-gray-md no-underline {% if showTaxes == false %}active{% endif %}">
+              <p class="button-text text-sm-bold">{{'Företag' | t}}</p>
+              <p class="button-text text-xs-regular">{{'Exkl. moms' | t}}</p>
+            </button>
+          {% endwm3form %}
+          {% wm3form customer.show_taxes_url, class="show-taxes" %}
+            <input name="show" type="hidden" value="true">
+            <button type="submit" class="privatperson d-flex flex-column align-items-start link-gray-md no-underline {% if showTaxes %}active{% endif %}">
+              <p class="text-sm-bold">{{'Privatperson' | t}}</p>
+              <p class="text-xs-regular">{{'Inkl. moms' | t}}</p>
+            </button>
+          {% endwm3form %}
+        {%endunless%}
+      </div>
+  </div>
+  <div class="mobile-nav-items-level-2 d-flex flex-column hidden">
+    <div class="go-back btn-secondary-lg borderless" data-nav-level="2">{{go_back}} Gå tillbaka</div>
+    {%for child in groups.vart-sortiment.children%}
+      {%if child.children.size > 0%}
+        {%for grandchild in child.children%}
+          {%if forloop.first%}
+           <a href="{{child.url}}" class="mobile-nav-item-level-2 btn-secondary-lg borderless prev-category" data-child-to-parent-id="{{child.id}}">{{'Visa allt i ' | t}} {{child.name}}</a>
+          {%endif%}
+          {%if grandchild.children.size > 0%}
+            <button class="mobile-nav-item mobile-nav-item-level-2 btn-secondary-lg borderless justify-content-between" data-child-to-parent-id="{{child.id}}" data-parent-id="{{grandchild.id}}" data-nav-level="3">{{grandchild.name}}{{chevron_right}}</button>
+          {%else%}
+            <a href="{{grandchild.url}}" class="mobile-nav-item-level-2 btn-secondary-lg borderless" data-child-to-parent-id="{{child.id}}">{{grandchild.name}}</a>
+          {%endif%}
+        {%endfor%}
+      {%endif%}
+    {%endfor%}
+  </div>
+  <div class="mobile-nav-items-level-3 d-flex flex-column hidden">
+    <div class="go-back btn-secondary-lg borderless" data-nav-level="3">{{go_back}} Gå tillbaka</div>
+    {%for child in groups.vart-sortiment.children%}
+      {%if child.children.size > 0%}
+        {%for grandchild in child.children%}
+          {%if grandchild.children.size > 0%}
+            {%for tertiarychild in grandchild.children%}
+              {%if forloop.first%}
+                <a href="{{grandchild.url}}" class="mobile-nav-item-level-3 btn-secondary-lg borderless prev-category" data-child-to-parent-id="{{grandchild.id}}">{{'Visa allt i ' | t}} {{grandchild.name}}</a>
+              {%endif%}
+              <a href="{{tertiarychild.url}}" class="mobile-nav-item-level-3 btn-secondary-lg borderless" data-child-to-parent-id="{{grandchild.id}}">{{tertiarychild.name}}</a>
+            {%endfor%}
+          {%endif%}
+        {%endfor%}
+      {%endif%}
+    {%endfor%}
+  </div>
+</div>
+{% endcomment%}
+
+<div class="search-result--mobile d-block d-lg-none d-none">
+  <div class="tabs col-12 d-flex text-align-center">
+    <button type="button" class="search-mobile-tab products-tab active col-6">Produkter</button>
+    <button type="button" class="search-mobile-tab category-tab col-6">Kategorier</button>
+  </div>
+  <div class="search-mobile-tab-content search-mobile-tab-content--products open"></div>
+  <div class="search-mobile-tab-content search-mobile-tab-content--categories d-flex flex-column p-3"></div>
+</div>
