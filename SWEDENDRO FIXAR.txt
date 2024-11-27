@@ -1,0 +1,41 @@
+SWEDENDRO (BACKEND)
+- Skapa ny variant, trycker spara, byter sida
+- Skapa ny variant, lägg till media, förlorar allt innehåll 
+
+PAGINATION (BACKEND)
+- Lägg till paginering på top på lagersaldo med på samma sätt som produktr
+
+
+SIDECART
+- Ändra länk från /w/checkout till w/cart [FIXAT]
+- lägg till variant quantity på sidecart items. [FIXAT]
+
+SEARCH
+- product-search-card__name word-wrap: break-word
+- Kategorier delas upp i 3, huvudgrupp, slutgrupp, varumärke. (kola om de ska de ha AI SÖk)
+
+GRUPPSIDA
+- Alla grupper som ej är sliutgrupper, visar ej produkter, visar endast kort på undergrupperna.
+- Bara slutgrupper visar produkter.
+
+
+VARIANTCHANGE
+- När man har gjort val och fått bild, dölj resterande bilder (Invänta förslag från Dan)
+
+SIDOMENY GRUPP
+- Bara edges grupper (utan undergrupper) som vi visar kvantitet.
+
+
+STARTSIDA
+- Upptäck vårtsortiment section, ikoner vid länknar
+- Start banners, ge dimensioner till Dan 
+- Kolla stöd för bild över text på banners. 
+
+
+Filter lista
+- Fält "Grupp" möjlighet för flera grupper??
+
+
+PRODUKTSIDA
+- "Back", leder tillbaka till /products, se till att den bara backar.
+
