@@ -1,0 +1,96 @@
+<div class="parent-container product-card {% if col %}{{col}}{% else %}col-6 col-lg-4 col-xl-3{% endif %} mb-3">
+{% if col %} <div class="slider-inner">{%endif %}
+    <a href="{{prod.url}}{% if request.params['search'] %}?v={{request.params['search']}}{% endif%}" class="product-card-link bg-gray">
+      <div class="product-card-image-wrapper bg-white" style="aspect-ratio: 1 / 1;align-content: center;" >
+        <img class="img-fluid" style="aspect-ratio: 1 / 1; object-fit: contain; max-height: 100%;"
+             src="{% if variant.first_image.small.size > 0 %}
+            {{ variant.first_image.small }}
+          {% else %}
+            https://d1da7yrcucvk6m.cloudfront.net/sites/1282/media/1120674_medium_out-of-stock-sm.png?1704436956
+          {% endif %}"
+             alt="{{ prod.name }}"
+        />
+        {%if prod.prices.sale.exists?%}
+          <div class="campaign">-{{prod.prices.sale.discount | round}}%</div>
+        {% endif %}
+
+        {%for grp in prod.groups.all%}
+          {%if grp.id == 20598%}
+            {%unless prod.prices.sale.exists?%}
+              <div class="nyhet"> {{ 'Nyhet' | t }}</div>
+            {%endunless%}
+          {%endif%}
+        {%endfor%}
+
+      </div>
+      <div class="product-card-info  spacing-4">
+        <p class="text-md-semibold product-card-name mb-1">{{prod.name}}</p>
+        <div class="d-flex align-items-center">
+          <p class="text-sm-regular d-flex stock-state">
+            {% assign backorderable = variant.stock_item.backorderable %}
+            {% assign in_stock = variant.in_stock? %}
+            {%if in_stock%}
+              <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8" fill="none" style="margin-right: 8px;width: 10px;margin-top: 5px;">
+                <circle cx="4" cy="4" r="3" fill="#17B26A"></circle>
+              </svg>
+              {{ variant.stock_item.delivery_time_in_stock | t  }}
+            {%endif%}
+            {% if in_stock == false and backorderable == false %}
+              <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8" fill="none" style="margin-right: 8px;width: 10px;margin-top: 5px;">
+                <circle cx="4" cy="4" r="3" fill="#F04438"></circle>
+              </svg>
+              {{ variant.stock_item.out_of_stock_message | t  }}
+            {%endif%}
+            {% if in_stock == false and backorderable == true %}
+              {% if variant.stock_item.delivery_time_out_of_stock contains 'I lager'%}
+                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8" fill="none" style="margin-right: 8px;width: 10px;margin-top: 5px;">
+                  <circle cx="4" cy="4" r="3" fill="#17B26A"/>
+                </svg>
+              {% else %}
+                <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8" fill="none" style="margin-right: 8px;width: 10px;margin-top: 5px;">
+                  <circle cx="4" cy="4" r="3" fill="#f0aa38"/>
+                </svg>
+              {% endif %}
+              {{ variant.stock_item.delivery_time_out_of_stock  | t  }}
+            {%endif%}
+          </p>
+
+        </div>
+
+        {%if prod.prices.sale.exists? or prod.prices.current.discount_list? == true %}
+          <div class="d-flex align-items-center gap-2">
+            <p class="product-card-price text-xl-bold  product-campaign-price mb-0">
+              {% if prod.has_variants? %}
+                {{ 'Från pris' | t }}
+              {% endif %}
+              {% if product.prices.sale.amount > 0 %}
+                {% if showTaxes == true %}{{ variant.prices.sale.after_tax_amount | currency: currency_precision }}{% else %}{{ variant.prices.sale.pre_tax_amount | currency: currency_precision }}{% endif %}
+              {% else %}
+                {% if showTaxes == true %}{{ variant.prices.current.after_tax_amount | currency: currency_precision }}{% else %}{{ variant.prices.current.pre_tax_amount | currency: currency_precision }}{% endif %}
+              {% endif %}
+            </p>
+            <p class="product-card-price stroke mb-0">
+              {% if showTaxes == true %}{{ variant.prices.default.after_tax_amount | currency: currency_precision }}{% else %}{{ variant.prices.default.pre_tax_amount | currency: currency_precision }}{% endif %}
+            </p>
+          </div>
+        {%else%}
+          <div class="d-flex align-items-center">
+            <p class="product-card-price text-xl-bold mb-0">
+              {% if prod.has_variants? %}
+                {{ 'Från pris' | t }}
+              {% endif %}
+              {% if showTaxes == true %}{{ variant.prices.current.after_tax_amount | currency: currency_precision }}{% else %}{{ variant.prices.current.pre_tax_amount | currency: currency_precision }}{% endif %}
+            </p>
+          </div>
+        {%endif%}
+        <div class="product-variants">
+          {% if prod.has_variants? %}
+            <p class="text-sm-regular m-0">{{ 'Finns i flera varianter' | t }}</p>
+          {% endif %}
+        </div>
+      </div>
+    </a>
+
+    <a class="btn-primary-lg w-100 d-flex justify-content-center" href="{{ prod.url }}{% if request.params['search'] %}?v={{request.params['search']}}{% endif%}">{{ 'Läs mer' | t}}</a>
+    {% if col %}</div>{% endif %}
+</div>

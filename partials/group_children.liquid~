@@ -1,0 +1,13 @@
+{% for child in group.children %}
+  <div class="group-child col-md-6 col-lg-3">
+    <a class="group-child__link" href="{{ child.url }}">
+      <div class="group-child__image-wrapper">
+        <img class="group-child__image"
+          src="{{ child.image_url | fallback: "https://fakeimg.pl/556x556/282828/eae0d0/?retina=1&text=Bild Saknas" }}"
+          alt="{{ child.name }}"/>
+      </div>
+
+      <p class="group-child__name">{{ child.name }}</p>
+    </a>
+  </div>
+{% endfor %}

@@ -1,0 +1,229 @@
+{% if request.params['get'] == 'nav' %}
+  {% include 'get_nav' %}
+
+{% else %}
+  {% include 'header' %}
+
+  <section class="container-fluid" style="margin-bottom: 48px">
+    <div class="container">
+      {%include 'start_layout'%}
+    </div>
+  </section>
+
+  <section class="container-fluid bg-gray">
+    <div class="container d-flex flex-column sortiment-section">
+      <h3 class="sm-black">{{'Upptäck vårt sortiment' | t}}</p>
+        <hr class="gray-300" />
+        <div class="row">
+          {%for row in lists.startsida-sortiment.rows%}
+            {% if row.group[0].name.size > 0 %}
+              {% if row.group[0].visible? %}
+                <div class="col-md-6 col-lg-3 col-xl-2">
+                  <div class="d-flex" style="padding-top: 32px; padding-bottom: 32px;">
+                    <a href="{{ row.group[0].url }}" class="d-flex justify-content-center align-items-center text-md-semibold">
+                      <img src="{{ row.icon }}" height="20" width="20" style="margin-right: 12px" alt="{{ row.group[0].name }}">
+                      {{ row.group[0].name }}
+                    </a>
+                  </div>
+                </div>
+              {% endif %}
+            {% endif %}
+          {%endfor%}
+        </div>
+    </div>
+  </section>
+
+
+  {% assign slider_group = lists.startsida-utvalda-kategorier.rows[0].grupp[0]%}
+  {% if slider_group %}
+    <section class="section-product-feed product-single-recommended py-5">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <h3 class="sm-black">{{ lists.startsida-utvalda-kategorier.rows[0].grupp[0].name }}</h3>
+          </div>
+        </div>
+        <div class="row ml-5">
+          <div class="swiper mySwiper2 pb-5">
+            <div class="swiper-wrapper">
+              {% assign my_products = slider_group.products.sort.position_asc.limit=10.paginate %}
+              {% assign col = 'swiper-slide' %}
+              {% include 'products' %}
+            </div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-pagination text-start mt-4"></div>
+          </div>
+        </div>
+        <div class="text-end">
+          <a class="btn-tertiary-icon" href="{{ lists.startsida-utvalda-kategorier.rows[0].grupp[0].url }}">
+            {{ 'Visa alla' | t}}
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="21" viewBox="0 0 20 21" fill="none">
+              <path d="M3.3335 10.5H16.6668M16.6668 10.5L11.6668 5.5M16.6668 10.5L11.6668 15.5" stroke="white" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+
+  <!-- Initialize Swiper -->
+  <script>
+    var swiper = new Swiper(".mySwiper1", {
+      slidesPerView: 1.3,
+      spaceBetween: 20,
+      pagination: {
+        el: ".swiper-pagination",
+        clickable: true,
+      },
+      navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
+      },
+      breakpoints: {
+        640: {
+          slidesPerView: 2,
+        },
+        768: {
+          slidesPerView: 3,
+        },
+        1024: {
+          slidesPerView: 5,
+        },
+      },
+    });
+  </script>
+
+
+  <section class='other-articles-section container-fluid bg-white'>
+    <div class="container">
+      <div class="col-lg-12">
+        <div class="more-articles-header">
+          <h2 class="md-bold">{{'Kunskapsportalen' | t }}</h2>
+          <a href="/kunskapsportalen" class="btn-primary">{{'Till alla artiklar' | t }}</a>
+        </div>
+      </div>
+      <div class="more-articles-outer row">
+        {% for a in articles.all.2 %}
+          {% include 'article_card'%}
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+
+  {% assign slider_group = lists.startsida-utvalda-kategorier.rows[1].grupp[0]%}
+  {% if slider_group %}
+    <section class="section-product-feed product-single-recommended py-5">
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <h3 class="sm-black">{{ lists.startsida-utvalda-kategorier.rows[1].grupp[0].name }}</h3>
+          </div>
+        </div>
+        <div class="row ml-5">
+          <div class="swiper mySwiper2 pb-5">
+            <div class="swiper-wrapper">
+              {% assign my_products = slider_group.products.sort.position_asc.limit=10.paginate %}
+              {% assign col = 'swiper-slide' %}
+              {% include 'products' %}
+            </div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-pagination text-start mt-4"></div>
+          </div>
+        </div>
+        <div class="text-end">
+          <a class="btn-tertiary-icon" href="{{ lists.startsida-utvalda-kategorier.rows[1].grupp[0].url }}">
+            {{ 'Visa alla' | t}}
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="21" viewBox="0 0 20 21" fill="none">
+              <path d="M3.3335 10.5H16.6668M16.6668 10.5L11.6668 5.5M16.6668 10.5L11.6668 15.5" stroke="white" stroke-width="1.66667" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </section>
+  {% endif %}
+
+  <!-- Initialize Swiper -->
+  <script>
+    var swiper = new Swiper(".mySwiper2", {
+      slidesPerView: 1.3,
+      spaceBetween: 20,
+      pagination: {
+        el: ".swiper-pagination",
+        clickable: true,
+      },
+      navigation: {
+        nextEl: ".swiper-button-next",
+        prevEl: ".swiper-button-prev",
+      },
+      breakpoints: {
+        640: {
+          slidesPerView: 2,
+        },
+        768: {
+          slidesPerView: 3,
+        },
+        1024: {
+          slidesPerView: 5,
+        },
+      },
+    });
+  </script>
+
+  <section class="container-fluid section-brands">
+    <div class="container d-flex flex-column">
+      <h3 class="sm-black">{{ 'Populära varumärken' | t }}</h3>
+      <hr class="gray-400" />
+      <div class="row">
+        {%for row in lists.startsida-populara-varumarken.rows %}
+          <div class="col-md-6 col-lg-3 col-xl-2">
+            <div class="d-flex justify-content-around">
+              <div class="d-flex group-wrapper" style="padding-top: 32px; padding-bottom: 32px;">
+                <a href="{{ row.grupp[0].url }}" class="d-flex justify-content-center align-items-center text-md-semibold">
+                  <img src="{{ row.grupp[0].image_url }}" alt="{{ row.grupp[0].name }}">
+                </a>
+              </div>
+            </div>
+          </div>
+        {%endfor%}
+      </div>
+    </div>
+  </section>
+
+  <section class="container-fluid section-usp">
+    <div class="bg-usp"></div>
+    <div class="container p-5">
+      <div class="row">
+        <div class="col-lg-6 col-xl-3">
+          <div class="d-flex align-items-center gap-3 p-3 mb-3">
+            <img src="{{ 'icon-map-point.png' | asset_path }}" width="24" height="24">
+            <div>{{ 'usp_1' | global_editable }}</div>
+          </div>
+        </div>
+        <div class="col-lg-6 col-xl-3">
+          <div class="d-flex align-items-center gap-3 p-3 mb-3">
+            <img src="{{ 'icon-shield.png' | asset_path }}" width="24" height="24">
+            <div>{{ 'usp_2' | global_editable }}</div>
+          </div>
+        </div>
+        <div class="col-lg-6 col-xl-3 ">
+          <div class="d-flex align-items-center gap-3 p-3 mb-3">
+            <img src="{{ 'icon-Delivery.png' | asset_path }}" width="24" height="24">
+            <div>{{ 'usp_3' | global_editable }}</div>
+          </div>
+        </div>
+        <div class="col-lg-6 col-xl-3 ">
+          <div class="d-flex align-items-center gap-3 p-3">
+            <img src="{{ 'icon-chat.png' | asset_path }}" width="24" height="24">
+            <div>{{ 'usp_4' | global_editable }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {% include 'footer' %}
+{% endif %}

@@ -1,0 +1,834 @@
+@import 'colors'
+@import 'typography'
+@import 'spacings_radius'
+@import 'ui_elements'
+
+// --------------------------
+// MAX WIDTH 648px
+// --------------------------
+.w648
+  max-width: 648px
+
+// --------------------------
+// Header height
+// --------------------------
+$header-desktop-height: 120px
+
+
+// --------------------------
+// COMPONENTS
+// --------------------------
+modal-component
+  display: none
+  position: fixed
+  z-index: 1000
+  opacity: 0
+  transition: all 0.3s ease-in-out
+
+  &.open
+    opacity: 1
+
+.overlay
+  display: none
+  position: fixed
+  opacity: 0
+  z-index: 999
+  inset: 0
+  background: $overlay-black-20
+  transition: opacity 300ms ease-out
+
+  &.open
+    opacity: 1
+
+accordion-component
+  .dropdown
+    display: none
+    height: 0
+    overflow: hidden
+    transition: all 300ms ease
+    //padding-bottom: $spacing-sm
+
+    &.close
+      height: 0 !important
+      padding: 0
+
+
+  .material-symbols-rounded
+    transition: transform 0.3s ease-in-out
+
+  &:has(.open)
+    max-height: 3000px
+
+    .material-symbols-rounded
+      transform: rotate(180deg)
+
+.primary-accordion-wrapper
+  border-radius: 5px
+  background-color: white
+  summary
+    display: flex
+    align-items: center
+    justify-content: space-between
+    list-style: none
+    padding: 10px 0
+    user-select: none
+
+    &:after
+      content: ""
+      width: 24px
+      height: 24px
+      display: inline-block
+      background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 9L12 15L18 9" stroke="%23030712" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>')
+
+
+  span
+    display: flex
+    justify-content: center
+    align-items: center
+    flex-grow: 0
+    flex-shrink: 0
+    width: 34px
+    height: 34px
+
+  &[open]
+    padding-bottom: 16px !important
+
+    .fa-circle-minus
+      display: flex
+
+    .fa-circle-plus
+      display: none
+
+    summary:after
+      transform: rotate(180deg)
+
+
+form-component
+  width: 100%
+
+.form-popup-modal
+  width: calc(100% - 16px)
+  top: 50%
+  left: 50%
+  transform: translate(-50%, -50%)
+
+  @media (min-width: 992px)
+    width: 50%
+    max-width: 650px
+
+.contact-modal
+  background-color: $white
+  padding: $spacing-2xl $spacing-sm
+  border-radius: $radius-xs
+  box-shadow: 0px 8px 24px 0px rgba(16, 24, 40, 0.08), 0px 4px 8px 0px rgba(16, 24, 40, 0.03)
+
+
+.featured-card--link
+  color: $text-primary
+  text-decoration: none
+
+  .feature-card__image
+    overflow: hidden
+
+    img
+      transition: transform 0.3s ease-out
+
+  .will-underline
+    text-decoration: underline solid 1px transparent
+    transition: 300ms text-decoration-color ease-out
+
+  @media (hover: hover)
+    &:hover
+      .feature-card__image
+        img
+          transform: scale(1.05)
+
+      .will-underline
+        text-decoration-color: $text-primary
+
+
+// --------------------------
+// GLOBAL
+// --------------------------
+html, body
+  height: 100%
+  scroll-behavior: smooth
+
+body
+  overflow-x: hidden
+  display: flex
+  flex-direction: column
+  background-color: $background-default
+  color: $text-primary
+
+
+header
+  position: fixed
+  top: 0
+  width: 100%
+  z-index: 980
+  background-color: $white
+
+  .desktop-nav-item
+    padding: 0 $spacing-sm
+    border-radius: $radius-sm
+    &:hover
+      background: $background-brand-secondary
+      a
+        color: initial!important
+
+button
+  *
+    pointer-events: none
+
+
+.material-symbols-rounded.sm
+  font-size: 20px
+
+.page-breadcrumb__item
+  display: flex
+  align-items: center
+
+  &.active
+    text-decoration: none
+    color: $text-tertiary
+
+  span
+    color: $text-tertiary
+
+// --------------------------
+// HELPERS
+// --------------------------
+.display-lg-heading
+  h1, h2, h3, h4, h5
+    @extend .display-lg
+
+.display-md-heading
+  h1, h2, h3, h4, h5
+    @extend .display-md
+
+.display-sm-heading
+  h1, h2, h3, h4, h5
+    @extend .display-sm
+
+.display-xs-heading
+  h1, h2, h3, h4, h5
+    @extend .display-xs
+
+.display-subtitle-1-heading
+  h1, h2, h3, h4, h5
+    @extend .subtitle-1
+
+.display-subtitle-2-heading
+  h1, h2, h3, h4, h5
+    @extend .subtitle-2
+
+.text-xl-p
+  p
+    @include fontSizePxToRem(20)
+
+.text-lg-p
+  p
+    @extend .text-lg
+
+.text-md-p
+  p
+    @extend .text-md
+
+.p-semi
+  p
+    font-weight: 600
+
+.p-light
+  p
+    font-weight: 300
+
+.p-color-secondary
+  p
+    color: $text-secondary
+
+.family-heading
+  font-family: $font-heading
+
+  *
+    font-family: $font-heading
+
+.brand-button-primary-editable
+  a
+    @extend .brand-button-primary
+
+.brand-button-secondary-editable
+  a
+    @extend .brand-button-secondary
+
+.brand-buttons
+  p:has(a)
+    a
+      @extend .brand-button-secondary
+
+  p:first-of-type
+    a
+      @extend .brand-button-primary
+
+.neutral-buttons
+  p:has(a)
+    a
+      @extend .neutral-button-secondary
+
+  p:first-of-type
+    a
+      @extend .neutral-button-primary
+
+.neutral-button-primary-editable
+  a
+    @extend .neutral-button-primary
+
+.neutral-button-secondary-editable
+  a
+    @extend .neutral-button-secondary
+
+
+.inline-flex-links
+  a
+    display: inline-flex !important
+
+.black-links
+  a
+    @extend .black-link
+
+.white-links
+  a
+    @extend .white-link
+
+.brand-links
+  a
+    @extend .brand-link
+
+
+.brand-links--padding-base
+  a
+    padding: $spacing-base $spacing-xs
+
+.border-white
+  border: 1px solid $white
+
+.border-x
+  border-right: 1px solid $border-disabled
+  border-left: 1px solid $border-disabled
+
+.border-top
+  border-top: 1px solid $border-disabled
+
+.aspect-ratio-3x2
+  aspect-ratio: 3/2
+
+.aspect-ratio-1x1
+  aspect-ratio: 1/1
+
+.w-fit-content
+  width: fit-content
+
+.truncate-text-2
+  display: -webkit-box
+  -webkit-line-clamp: 2
+  -webkit-box-orient: vertical
+  overflow: hidden
+  text-overflow: ellipsis
+
+
+
+
+// --------------------------
+// HEADER
+// --------------------------
+.nav-logo
+  img
+    height: 48px
+
+#mobile-menu
+  display: none
+  position: fixed
+  background-color: $background-default
+  left: 0
+  top: 80px
+  width: 100%
+  height: calc(100dvh - 80px)
+  overflow-y: auto
+  transition: opacity 0.3s ease-in-out
+
+.desktop-dropdown
+  position: absolute
+  white-space: nowrap
+  right: 0
+.main-nav  .icon-button
+  color: white
+
+
+// --------------------------
+// START
+// --------------------------
+#page-loader
+  position: fixed
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  background-color: white
+  z-index: 9999
+  opacity: 1
+  transition: opacity 0.5s ease-in-out
+  &.close
+    opacity: 0
+
+  &.minimize
+    display: none!important
+    z-index: 0
+.hero-section
+  .bg-overlay
+    position: absolute
+    top: 0
+    left: 0
+    width: 100%
+    height: 100%
+    background-color: rgb(34 38 42 / 40%)
+.hero-full-slider__image
+  aspect-ratio: 0.51
+  max-height: calc(900px - $header-desktop-height)
+  img
+    object-fit: cover
+    min-width: 100%
+    height: 100%
+  @media (min-width: 992px)
+    aspect-ratio: 2
+
+
+.callout-grid
+  display: grid
+  grid-auto-flow: row
+
+  @media (min-width: 992px)
+    grid-auto-columns: 1fr 1fr
+    grid-auto-flow: column
+    align-items: center
+
+.callout-image
+  p
+    margin: 0
+  img
+    width: 100%
+    aspect-ratio: 1
+    object-fit: cover
+
+.callout-list--check,
+.callout-list--check > ul
+  display: flex
+  flex-direction: column
+  row-gap: $spacing-sm
+  padding: 0
+  list-style: none
+
+  li
+    display: flex
+    align-items: flex-start
+    position: relative
+    padding-left: 36px
+    @media (min-width: 992px)
+      align-items: center
+
+  li::marker
+    content: ''
+
+  li::before
+    position: absolute
+    left: 0
+    content: url('data:image/svg+xml, <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M10.5808 14.1463L8.25775 11.823C8.11925 11.6847 7.94517 11.6138 7.7355 11.6105C7.526 11.6073 7.34875 11.6782 7.20375 11.823C7.05892 11.968 6.9865 12.1437 6.9865 12.35C6.9865 12.5563 7.05892 12.732 7.20375 12.877L9.948 15.6212C10.1288 15.8019 10.3398 15.8923 10.5808 15.8923C10.8218 15.8923 11.0327 15.8019 11.2135 15.6212L16.777 10.0578C16.9153 9.91925 16.9862 9.74517 16.9895 9.5355C16.9927 9.326 16.9218 9.14875 16.777 9.00375C16.632 8.85892 16.4563 8.7865 16.25 8.7865C16.0437 8.7865 15.868 8.85892 15.723 9.00375L10.5808 14.1463ZM12.0017 21.5C10.6877 21.5 9.45267 21.2507 8.2965 20.752C7.14033 20.2533 6.13467 19.5766 5.2795 18.7218C4.42433 17.8669 3.74725 16.8617 3.24825 15.706C2.74942 14.5503 2.5 13.3156 2.5 12.0017C2.5 10.6877 2.74933 9.45267 3.248 8.2965C3.74667 7.14033 4.42342 6.13467 5.27825 5.2795C6.13308 4.42433 7.13833 3.74725 8.294 3.24825C9.44967 2.74942 10.6844 2.5 11.9983 2.5C13.3123 2.5 14.5473 2.74933 15.7035 3.248C16.8597 3.74667 17.8653 4.42342 18.7205 5.27825C19.5757 6.13308 20.2528 7.13833 20.7518 8.294C21.2506 9.44967 21.5 10.6844 21.5 11.9983C21.5 13.3123 21.2507 14.5473 20.752 15.7035C20.2533 16.8597 19.5766 17.8653 18.7218 18.7205C17.8669 19.5757 16.8617 20.2528 15.706 20.7518C14.5503 21.2506 13.3156 21.5 12.0017 21.5ZM12 20C14.2333 20 16.125 19.225 17.675 17.675C19.225 16.125 20 14.2333 20 12C20 9.76667 19.225 7.875 17.675 6.325C16.125 4.775 14.2333 4 12 4C9.76667 4 7.875 4.775 6.325 6.325C4.775 7.875 4 9.76667 4 12C4 14.2333 4.775 16.125 6.325 17.675C7.875 19.225 9.76667 20 12 20Z" fill="%23383C41"/></svg>')
+    height: 24px
+    width: 24px
+
+.start-fixed-height-section
+  .bg-brand-light
+    height: 100%
+  .rounded-image
+    img
+      width: 100%!important
+      object-fit: cover
+      height: 476px!important
+    p
+      margin: 0
+
+.start-resellers-list
+  .feature-card
+    height: 100%
+
+  .col-lg-4:nth-child(n+4)
+    display: none
+
+// --------------------------
+// DEFAULT
+// --------------------------
+
+.callout-container,
+.callout-container .row
+  height: auto
+  @media (min-width: 992px)
+    min-height: 810px
+
+  .row
+    height: 100%
+
+.callout-image
+  padding: 0 !important
+
+  &.right
+    @media (min-width: 992px)
+      position: absolute
+      right: 0
+      top: 0
+      bottom: 0
+
+  &.left
+    @media (min-width: 992px)
+      position: absolute
+      left: 0
+      top: 0
+      bottom: 0
+
+  p
+    height: 100%
+
+  img
+    width: 100%
+    object-fit: cover
+    aspect-ratio: 1
+    @media (min-width: 992px)
+      height: 100%
+
+
+.callout-image--simple-gray
+  img
+    width: 100%
+    height: 351px
+    object-fit: cover
+    @media (width >= 992px)
+      height: 640px
+
+.callout-text--simple-gray
+  > div
+    background-color: $background-secondary
+    padding-top: $spacing-4xl
+    padding-bottom: $spacing-4xl
+
+  @media (width >= 992px)
+    background-color: $background-secondary
+
+
+.default-main-content
+  .image-full-width
+    img
+      width: 100%
+      height: auto!Important
+  img
+    max-width: 100%
+    height: auto!Important
+    border-radius: $radius-lg
+  a
+    color: $text-brand-default
+
+
+  form
+    p
+      font-size: 16px
+      font-weight: 500
+      margin-bottom: 0
+
+
+
+    input[type='text'], input[type='email'], input[type='password'], textarea, select
+      border-radius: var(--Radius-radius-sm, 8px)
+      border: 1px solid var(--Border-primary, #22262A)
+      width: 100%
+      padding: var(--Spacing-spacing-sm, 12px)
+      align-self: stretch
+      margin-bottom: 24px
+
+    input[type='file']
+      height: 48px
+      justify-content: center
+      align-items: center
+
+
+    input[type='submit'], button[type='submit']
+      @extend .brand-button-primary
+      margin-top: 32px
+
+  .col-text-items
+    img
+      background-color: $background-brand-secondary
+      padding: $spacing-sm
+      border-radius: $radius-full
+
+.default-sidebar__contact-block
+  a::before
+    content: ""
+    display: inline-block
+    background-repeat: no-repeat
+    height: 24px
+    width: 24px
+
+  a[href^="tel"]
+    &::before
+      background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M19.4402 20.5C17.5557 20.5 15.6625 20.0618 13.7605 19.1855C11.8587 18.3092 10.1113 17.073 8.51825 15.477C6.92542 13.8808 5.69083 12.1333 4.8145 10.2345C3.93817 8.33583 3.5 6.44425 3.5 4.55975C3.5 4.25692 3.6 4.00458 3.8 3.80275C4 3.60092 4.25 3.5 4.55 3.5H7.8115C8.064 3.5 8.28675 3.58242 8.47975 3.74725C8.67275 3.91192 8.7955 4.11542 8.848 4.35775L9.42125 7.3C9.46092 7.573 9.45258 7.80758 9.39625 8.00375C9.33975 8.19992 9.23842 8.36467 9.09225 8.498L6.78275 10.7462C7.15442 11.4269 7.57908 12.0708 8.05675 12.678C8.53425 13.285 9.05125 13.8647 9.60775 14.4173C10.1564 14.9661 10.7397 15.4757 11.3577 15.9462C11.9757 16.4167 12.6431 16.8546 13.3598 17.2598L15.6038 14.9963C15.7603 14.8334 15.9498 14.7192 16.1723 14.6538C16.3946 14.5884 16.6257 14.5724 16.8655 14.6058L19.6423 15.1713C19.8948 15.2379 20.1008 15.3667 20.2605 15.5577C20.4202 15.7487 20.5 15.9654 20.5 16.2078V19.45C20.5 19.75 20.3991 20 20.1973 20.2C19.9954 20.4 19.7431 20.5 19.4402 20.5ZM6.073 9.327L7.85775 7.61925C7.88975 7.59358 7.91058 7.55833 7.92025 7.5135C7.92992 7.46867 7.92833 7.427 7.9155 7.3885L7.48075 5.15375C7.46792 5.10258 7.4455 5.06417 7.4135 5.0385C7.3815 5.01283 7.33983 5 7.2885 5H5.15C5.1115 5 5.07942 5.01283 5.05375 5.0385C5.02825 5.06417 5.0155 5.09625 5.0155 5.13475C5.06667 5.81808 5.1785 6.51225 5.351 7.21725C5.52333 7.92242 5.764 8.62567 6.073 9.327ZM14.773 17.9693C15.4358 18.2783 16.1272 18.5145 16.847 18.678C17.567 18.8413 18.2397 18.9384 18.8652 18.9693C18.9037 18.9693 18.9358 18.9564 18.9615 18.9307C18.9872 18.9051 19 18.873 19 18.8345V16.7308C19 16.6794 18.9872 16.6377 18.9615 16.6058C18.9358 16.5737 18.8974 16.5513 18.8462 16.5385L16.7462 16.1115C16.7077 16.0987 16.6741 16.0971 16.6453 16.1067C16.6164 16.1164 16.5859 16.1372 16.5538 16.1692L14.773 17.9693Z" fill="%233C3F91"/></svg>')
+
+  a[href^="mailto"]
+    &::before
+      background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4.30775 19.5C3.80258 19.5 3.375 19.325 3.025 18.975C2.675 18.625 2.5 18.1974 2.5 17.6923V6.30775C2.5 5.80258 2.675 5.375 3.025 5.025C3.375 4.675 3.80258 4.5 4.30775 4.5H19.6923C20.1974 4.5 20.625 4.675 20.975 5.025C21.325 5.375 21.5 5.80258 21.5 6.30775V17.6923C21.5 18.1974 21.325 18.625 20.975 18.975C20.625 19.325 20.1974 19.5 19.6923 19.5H4.30775ZM20 7.44225L12.4865 12.252C12.4097 12.2955 12.3302 12.3298 12.248 12.3548C12.166 12.3798 12.0833 12.3923 12 12.3923C11.9167 12.3923 11.834 12.3798 11.752 12.3548C11.6698 12.3298 11.5903 12.2955 11.5135 12.252L4 7.44225V17.6923C4 17.7821 4.02883 17.8558 4.0865 17.9135C4.14417 17.9712 4.21792 18 4.30775 18H19.6923C19.7821 18 19.8558 17.9712 19.9135 17.9135C19.9712 17.8558 20 17.7821 20 17.6923V7.44225ZM12 11L19.8463 6H4.15375L12 11ZM4 7.673V6.52975V6.5595V6.52775V7.673Z" fill="%233C3F91"/></svg>')
+
+.default-sidebar__text-block
+  a
+    &::after
+      content: ""
+      display: inline-block
+      background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12.9463 12L8.87301 7.92701C8.73468 7.78851 8.66385 7.61443 8.66051 7.40476C8.65735 7.19526 8.72818 7.01801 8.87301 6.87301C9.01801 6.72818 9.19368 6.65576 9.40001 6.65576C9.60634 6.65576 9.78201 6.72818 9.92701 6.87301L14.4213 11.3673C14.5148 11.4609 14.5808 11.5597 14.6193 11.6635C14.6578 11.7673 14.677 11.8795 14.677 12C14.677 12.1205 14.6578 12.2327 14.6193 12.3365C14.5808 12.4403 14.5148 12.5391 14.4213 12.6328L9.92701 17.127C9.78851 17.2653 9.61443 17.3362 9.40476 17.3395C9.19526 17.3427 9.01801 17.2718 8.87301 17.127C8.72818 16.982 8.65576 16.8063 8.65576 16.6C8.65576 16.3937 8.72818 16.218 8.87301 16.073L12.9463 12Z" fill="%233C3F91"/></svg>')
+      height: 24px
+      width: 24px
+
+  a[href^="https"], a[href*="s3"], a[href*="cloudfront.net"]
+    &::after
+      background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 15.4115C11.8795 15.4115 11.7673 15.3923 11.6635 15.3538C11.5597 15.3154 11.4609 15.2494 11.3672 15.1558L8.25775 12.0463C8.10908 11.8974 8.03567 11.7233 8.0375 11.524C8.0395 11.3247 8.11292 11.1474 8.25775 10.9922C8.41292 10.8373 8.59108 10.7572 8.79225 10.752C8.99358 10.7468 9.17183 10.8218 9.327 10.977L11.25 12.9V5.25C11.25 5.03717 11.3218 4.859 11.4655 4.7155C11.609 4.57183 11.7872 4.5 12 4.5C12.2128 4.5 12.391 4.57183 12.5345 4.7155C12.6782 4.859 12.75 5.03717 12.75 5.25V12.9L14.673 10.977C14.8218 10.8283 14.9984 10.7549 15.2028 10.7568C15.4072 10.7588 15.5871 10.8373 15.7423 10.9922C15.8871 11.1474 15.9621 11.3231 15.9672 11.5192C15.9724 11.7154 15.8974 11.8911 15.7423 12.0463L12.6328 15.1558C12.5391 15.2494 12.4403 15.3154 12.3365 15.3538C12.2327 15.3923 12.1205 15.4115 12 15.4115ZM6.30775 19.5C5.80258 19.5 5.375 19.325 5.025 18.975C4.675 18.625 4.5 18.1974 4.5 17.6923V15.7308C4.5 15.5179 4.57183 15.3398 4.7155 15.1962C4.859 15.0526 5.03717 14.9808 5.25 14.9808C5.46283 14.9808 5.641 15.0526 5.7845 15.1962C5.92817 15.3398 6 15.5179 6 15.7308V17.6923C6 17.7692 6.03208 17.8398 6.09625 17.9038C6.16025 17.9679 6.23075 18 6.30775 18H17.6923C17.7692 18 17.8398 17.9679 17.9038 17.9038C17.9679 17.8398 18 17.7692 18 17.6923V15.7308C18 15.5179 18.0718 15.3398 18.2155 15.1962C18.359 15.0526 18.5372 14.9808 18.75 14.9808C18.9628 14.9808 19.141 15.0526 19.2845 15.1962C19.4282 15.3398 19.5 15.5179 19.5 15.7308V17.6923C19.5 18.1974 19.325 18.625 18.975 18.975C18.625 19.325 18.1974 19.5 17.6923 19.5H6.30775Z" fill="%233C3F91"/></svg>')
+
+.default-banner-bottom
+  .container
+    max-width: 648px
+  a
+    @extend .brand-button-primary
+    display: inline-block
+    margin: 0
+    margin-top: $spacing-xl
+  p
+    margin-bottom: $spacing-base
+
+
+
+.default-section-faq
+  details
+    background-color: white
+    border-radius: $radius-sm
+// --------------------------
+// NEWS
+// --------------------------
+.blog-card__link
+  display: flex
+  flex-direction: column
+  align-items: start
+  text-decoration: none
+
+  @media (hover: hover)
+    &:hover
+      .blog-card__title::after
+        opacity: 1
+
+      .blog-card__image
+        transform: scale(1.05)
+
+.blog-card__title
+  position: relative
+  margin-bottom: $spacing-xs
+
+  &::after
+    content: ""
+    display: block
+    position: absolute
+    bottom: 2px
+    opacity: 0
+    width: 100%
+    height: 2px
+    background-color: currentColor
+    transition: opacity 300ms ease-out
+
+.blog-card__image-wrapper
+  aspect-ratio: 3/2
+
+.blog-card__image
+  transition: transform 0.3s ease-out
+  object-fit: cover
+
+.paginate-button
+  position: relative
+  pointer-events: none
+
+  // Mobile arrow icons
+  @media (max-width: 992px)
+    height: 48px
+    width: 48px
+    display: flex
+    align-items: center
+    justify-content: center
+    opacity: .5
+    border-radius: $radius-full
+    border: 1px solid $border-primary
+
+    &:has(a)
+      pointer-events: auto
+      opacity: 1
+
+    &::after
+      display: block
+      content: ''
+      background-size: 100%
+      pointer-events: none
+      background-repeat: no-repeat
+      width: 24px
+      height: 24px
+
+
+  // Desktop text, set color based on if a link is present
+  span
+    display: none
+    pointer-events: none
+    @include fontSizePxToRem(16)
+    color: $text-disabled
+    @media (min-width: 992px)
+      display: block
+
+  &:has(a)
+    pointer-events: auto
+
+    span
+      color: $foreground-primary
+
+  a
+    font-size: 0
+    position: absolute
+    inset: 0
+
+.paginate-button--next::after
+  transform: rotate(180deg)
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M20 12H4M4 12L10 18M4 12L10 6" stroke="%23030712" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>')
+
+.paginate-button--prev::after
+  background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M20 12H4M4 12L10 18M4 12L10 6" stroke="%23030712" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>')
+
+
+// --------------------------
+// ARTICLE SINGLE
+// --------------------------
+
+.article-editable--wrapper
+  div
+    display: flex
+    flex-direction: column
+    row-gap: $spacing-base
+
+  *:not(p)
+    color: $text-primary
+
+  p
+    color: $text-secondary
+
+// --------------------------
+// PRODUCT SINGLE
+// --------------------------
+.product-card__image
+  position: relative
+  &:hover
+    .product-hover-img
+      opacity: 1
+      transition: all 0.3s ease-in-out
+.product-hover-img
+  position: absolute
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  opacity: 0
+  img
+    width: 100%
+
+.sticky-top-parent
+  position: relative
+  top: -100px
+.sticky-top
+  padding: 100px
+
+@media (max-width: 992px)
+  .sticky-top-parent
+    top: 0
+  .sticky-top
+    padding: 0
+
+
+.product-products-section-heading
+
+  p
+    margin: 0
+  a
+    @extend .brand-button-secondary
+    display: inline-block
+    padding-top: 10px
+    margin: 0
+    margin-top: $spacing-xl
+
+
+// --------------------------
+// CONTACT
+// --------------------------
+.contact-details
+  a
+    @extend .brand-link
+    display: inline-block
+    padding-top: 10px
+
+  a::before
+    content: ""
+    display: inline-block
+    background-repeat: no-repeat
+    height: 24px
+    width: 24px
+
+  a[href^="tel"]::before
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M19.4402 20.5C17.5557 20.5 15.6625 20.0618 13.7605 19.1855C11.8587 18.3092 10.1113 17.073 8.51825 15.477C6.92542 13.8808 5.69083 12.1333 4.8145 10.2345C3.93817 8.33583 3.5 6.44425 3.5 4.55975C3.5 4.25692 3.6 4.00458 3.8 3.80275C4 3.60092 4.25 3.5 4.55 3.5H7.8115C8.064 3.5 8.28675 3.58242 8.47975 3.74725C8.67275 3.91192 8.7955 4.11542 8.848 4.35775L9.42125 7.3C9.46092 7.573 9.45258 7.80758 9.39625 8.00375C9.33975 8.19992 9.23842 8.36467 9.09225 8.498L6.78275 10.7462C7.15442 11.4269 7.57908 12.0708 8.05675 12.678C8.53425 13.285 9.05125 13.8647 9.60775 14.4173C10.1564 14.9661 10.7397 15.4757 11.3577 15.9462C11.9757 16.4167 12.6431 16.8546 13.3598 17.2598L15.6038 14.9963C15.7603 14.8334 15.9498 14.7192 16.1723 14.6538C16.3946 14.5884 16.6257 14.5724 16.8655 14.6058L19.6423 15.1713C19.8948 15.2379 20.1008 15.3667 20.2605 15.5577C20.4202 15.7487 20.5 15.9654 20.5 16.2078V19.45C20.5 19.75 20.3991 20 20.1973 20.2C19.9954 20.4 19.7431 20.5 19.4402 20.5ZM6.073 9.327L7.85775 7.61925C7.88975 7.59358 7.91058 7.55833 7.92025 7.5135C7.92992 7.46867 7.92833 7.427 7.9155 7.3885L7.48075 5.15375C7.46792 5.10258 7.4455 5.06417 7.4135 5.0385C7.3815 5.01283 7.33983 5 7.2885 5H5.15C5.1115 5 5.07942 5.01283 5.05375 5.0385C5.02825 5.06417 5.0155 5.09625 5.0155 5.13475C5.06667 5.81808 5.1785 6.51225 5.351 7.21725C5.52333 7.92242 5.764 8.62567 6.073 9.327ZM14.773 17.9693C15.4358 18.2783 16.1272 18.5145 16.847 18.678C17.567 18.8413 18.2397 18.9384 18.8652 18.9693C18.9037 18.9693 18.9358 18.9564 18.9615 18.9307C18.9872 18.9051 19 18.873 19 18.8345V16.7308C19 16.6794 18.9872 16.6377 18.9615 16.6058C18.9358 16.5737 18.8974 16.5513 18.8462 16.5385L16.7462 16.1115C16.7077 16.0987 16.6741 16.0971 16.6453 16.1067C16.6164 16.1164 16.5859 16.1372 16.5538 16.1692L14.773 17.9693Z" fill="%233C3F91"/></svg>')
+
+  a[href^="mailto"]::before
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4.30775 19.5C3.80258 19.5 3.375 19.325 3.025 18.975C2.675 18.625 2.5 18.1974 2.5 17.6923V6.30775C2.5 5.80258 2.675 5.375 3.025 5.025C3.375 4.675 3.80258 4.5 4.30775 4.5H19.6923C20.1974 4.5 20.625 4.675 20.975 5.025C21.325 5.375 21.5 5.80258 21.5 6.30775V17.6923C21.5 18.1974 21.325 18.625 20.975 18.975C20.625 19.325 20.1974 19.5 19.6923 19.5H4.30775ZM20 7.44225L12.4865 12.252C12.4097 12.2955 12.3302 12.3298 12.248 12.3548C12.166 12.3798 12.0833 12.3923 12 12.3923C11.9167 12.3923 11.834 12.3798 11.752 12.3548C11.6698 12.3298 11.5903 12.2955 11.5135 12.252L4 7.44225V17.6923C4 17.7821 4.02883 17.8558 4.0865 17.9135C4.14417 17.9712 4.21792 18 4.30775 18H19.6923C19.7821 18 19.8558 17.9712 19.9135 17.9135C19.9712 17.8558 20 17.7821 20 17.6923V7.44225ZM12 11L19.8463 6H4.15375L12 11ZM4 7.673V6.52975V6.5595V6.52775V7.673Z" fill="%233C3F91"/></svg>')
+
+  a[href*="maps.app.goo"]::before
+    background-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12.0019 11.8652C12.4994 11.8652 12.9247 11.6881 13.2779 11.3338C13.6312 10.9794 13.8079 10.5535 13.8079 10.056C13.8079 9.5585 13.6307 9.13308 13.2764 8.77975C12.9221 8.42658 12.4961 8.25 11.9984 8.25C11.5009 8.25 11.0756 8.42717 10.7224 8.7815C10.3691 9.13583 10.1924 9.56183 10.1924 10.0595C10.1924 10.557 10.3696 10.9823 10.7239 11.3355C11.0782 11.6887 11.5042 11.8652 12.0019 11.8652ZM12.0001 19.5135C13.9565 17.7622 15.4536 16.0823 16.4914 14.474C17.5292 12.8657 18.0481 11.457 18.0481 10.248C18.0481 8.425 17.469 6.92633 16.3106 5.752C15.1523 4.57767 13.7155 3.9905 12.0001 3.9905C10.2848 3.9905 8.84798 4.57767 7.68965 5.752C6.53131 6.92633 5.95215 8.425 5.95215 10.248C5.95215 11.457 6.47107 12.8657 7.5089 14.474C8.54673 16.0823 10.0438 17.7622 12.0001 19.5135ZM12.0001 21.5095C9.48348 19.3288 7.59631 17.2994 6.33865 15.4212C5.08098 13.5429 4.45215 11.8185 4.45215 10.248C4.45215 7.94033 5.19856 6.07208 6.6914 4.64325C8.1844 3.21442 9.95398 2.5 12.0001 2.5C14.0463 2.5 15.8159 3.21442 17.3089 4.64325C18.8017 6.07208 19.5481 7.94033 19.5481 10.248C19.5481 11.8185 18.9193 13.5429 17.6616 15.4212C16.404 17.2994 14.5168 19.3288 12.0001 21.5095Z" fill="%233C3F91"/></svg>')
+
+// --------------------------
+// FOOTER
+// --------------------------
+.footer__links
+  p
+    margin: 0
+
+  &.text-primary
+    *
+      color: $text-primary
+    a
+      padding: $spacing-sm
+      text-decoration: none
+  &.text-brand
+    *
+      color: $text-brand-default
+    a
+
+      margin-right: $spacing-sm
+.footer__some
+  .footer__some-image
+
+// Mobile footer centering
+@media (max-width: 992px)
+  footer
+    text-align: center
+    a
+      display: block
+      text-align: center
+    .text-brand a
+      padding-bottom: $spacing-sm
+    .footer__some
+      .d-flex
+        display: block!important
+      a
+        display: inline-block
+        padding-top: 7px !important
+        text-align: center

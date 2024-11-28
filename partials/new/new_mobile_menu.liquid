@@ -57,7 +57,7 @@
   <modal-component id="main-menu">
     <div class="main-menu--mobile">
       <div class="d-flex flex-column">
-        {% for group in groups.sortiment.children %}
+        {% for group in groups.all %}
           {% assign topmeny_tag_exist = group.tags | select: 'name', 'topmeny' %}
           {% if topmeny_tag_exist.size > 0 and group.visible? %}
             {% if group.children.size > 0 %}

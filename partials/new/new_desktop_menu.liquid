@@ -1,4 +1,4 @@
-<div class="container spacing-3 flex-col navbar-desktop" id="mobile-nav-wrapper">
+<div class="container spacing-3 flex-col navbar-desktop" >
   <div class="top-navbar d-flex justify-content-between align-items-center spacing-lg hidden-mobile">
     <a href="/{% if locale != 'sv' %}{{ locale }}{% endif %}"><img src="{{ 'swedendro-logo.png' | asset_path }}"
                                                                    height="32" width="191" alt="{{ site.name }}"/></a>
@@ -58,8 +58,8 @@
 </top-element>
 
 <div class="container">
-  <div class="main-menu--desktop d-none d-lg-flex ">
-    {% for group in groups.sortiment.children %}
+  <div class="main-menu--desktop d-none d-lg-flex  flex-wrap">
+    {% for group in groups.all %}
       {% assign topmeny_tag_exist = group.tags | select: 'name', 'topmeny' %}
       {% if topmeny_tag_exist.size > 0 and group.visible? %}
         <button class="btn-tertiary-gray" type="button"
