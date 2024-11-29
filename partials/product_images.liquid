@@ -2,7 +2,10 @@
 
 {% if product.images.size > 0 %}
   <div style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff"
-       class="swiper mySwiper2 product-single-image-slider">
+       class="swiper mySwiper2 product-single-image-slider position-relative">
+    {%if product.prices.sale.exists? or product.prices.current.discount_list? == true%}
+      <div class="discount-flag top-left">{{showTaxes}}%</div>
+    {% endif %}
     <div class="swiper-wrapper d-flex align-items-center">
       {% for img in product.images %}
         <div class="swiper-slide">

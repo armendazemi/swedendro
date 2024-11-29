@@ -36,9 +36,8 @@ STARTSIDA
     4. BOT RIGHT (416x270 [16:9])
 - Kolla stöd för bild över text på banners. [HAR EJ STÖD. BARA BILD SOM GÄLLER]
 
-PRODUCTCARD
-Ni har säkert någon snygg liten flagga som säger Rea eller så som synns
-på produkten se denna https://swedendro.wm3.se/e/catalog/products/handoverfras-of-1400-ebq-plus-festool
+PRODUCTCARD [FIXAT]
+- Ni har säkert någon snygg liten flagga som säger Rea eller så som synns på produkten se denna https://swedendro.wm3.se/e/catalog/products/handoverfras-of-1400-ebq-plus-festool
 
 
 Filter lista (Avvakta, 99% nej.)
